@@ -1,0 +1,6 @@
+{
+  "domain": "http://localhost:",
+  "port": 7777,
+  "mongoUri": "mongodb+srv://woodpecker:wood3112pecker@cluster0.hgslm.mongodb.net/shop?retryWrites=true&w=majority",
+  "jwtSecret": "hillel-project"
+}
