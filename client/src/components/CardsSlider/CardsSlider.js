@@ -20,9 +20,9 @@ function CardsSlider() {
 
     request('/api/products', 'POST', {
       filter: {},
-      length: 8
+      length: 8,
+      sort: ['expensive']
     }).then(data => setCards(data));
-    console.log(123);
   }, [request]);
 
   return <>
@@ -39,10 +39,6 @@ function CardsSlider() {
       }}
       spaceBetween={0}
       slidesPerView={4}
-      autoplay={{
-        delay: 1500,
-        disableOnInteraction: false,
-      }}
       keyboard={{
         enabled: true,
         onlyInViewport: true,

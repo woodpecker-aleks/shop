@@ -8,10 +8,11 @@ export const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     marginBottom: theme.spacing(5),
+    paddingTop: theme.spacing(1)
   },
   cardMedia: {
     height: '180px',
-    backgroundSize: '40%'
+    backgroundSize: 'contain'
   },
   cardTitle: {
     marginBottom: theme.spacing(1),

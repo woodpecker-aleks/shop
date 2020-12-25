@@ -1,26 +1,19 @@
-import { makeStyles } from "@material-ui/core";
-import { useEffect } from "react";
+import { Typography } from "@material-ui/core";
+import BannerSlider from "../../BannerSlider/BannerSlider";
 import CardsSlider from "../../CardsSlider/CardsSlider";
+import { useStyles } from './HomePageClasses';
 
-const useStyles = makeStyles(theme => ({
-  divider: {
-    marginBottom: theme.spacing(5),
-  },
-  cards: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-  },
-  scroll: {
-    height: '100vh',
-  }
-}));
-
-function HomePage(props) {
-  const classes = useStyles(props);
+function HomePage() {
+  const classes = useStyles();
 
   return (
     <>
+      <BannerSlider className={classes.bannerSlider} />
+      <Typography
+        variant="h4"
+      >
+        Expensive
+      </Typography>
       <CardsSlider />
     </>
   );

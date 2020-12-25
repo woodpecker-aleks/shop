@@ -1,3 +1,16 @@
 .swiper-wrapper {
   padding-left: 0;
 }
+
+.MuiPaper-root {
+  overflow: hidden;
+}
+
+.MuiPaper-root .swiper-wrapper {
+  margin: 0;
+}
+
+
+.MuiPaper-root .swiper-container {
+  height: 250px;
+}

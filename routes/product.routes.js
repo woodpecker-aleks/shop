@@ -41,8 +41,6 @@ router.post('/products', async (req, res) => {
   try {
     const { filter, length, range, sort } = req.body;
 
-    for (let i = 0; i < 100000; i++) {} //Задержка 
-
     const queryFilter = {...filter};
     if (filter.options) delete queryFilter.options;
     if (filter.categories) delete queryFilter.categories;
