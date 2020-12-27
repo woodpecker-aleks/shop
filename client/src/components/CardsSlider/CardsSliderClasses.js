@@ -10,5 +10,9 @@ export const useStyles = makeStyles(theme => ({
   slide: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  slider: {
+    paddingBottom: theme.spacing(4) + 'px !important',
+    color: (theme.palette.type === 'light') ? theme.palette.primary.main : '#fafafa',
   }
 }));

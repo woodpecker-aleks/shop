@@ -7,8 +7,8 @@ export const useStyles = makeStyles(theme => ({
     minWidth: '200px',
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    marginBottom: theme.spacing(5),
-    paddingTop: theme.spacing(1)
+    paddingTop: theme.spacing(5),
+    position: 'relative'
   },
   cardMedia: {
     height: '180px',
@@ -16,6 +16,10 @@ export const useStyles = makeStyles(theme => ({
   },
   cardTitle: {
     marginBottom: theme.spacing(1),
+    width: '100%',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    fontSize: 18
   },
   cardBody: {
     padding: '15px 25px',
@@ -36,10 +40,36 @@ export const useStyles = makeStyles(theme => ({
   descriptionList: {
     paddingLeft: '20px',
     lineHeight: '25px',
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
   cardLink: {
     color: 'inherit',
     textDecoration: 'none',
   },
+  positive: {
+    color: theme.palette.success.main
+  },
+  negative: {
+    color: theme.palette.error.main
+  },
+  cardRating: {
+    position: 'absolute',
+    top: theme.spacing(1),
+    left: theme.spacing(1),
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '15px',
+    padding: theme.spacing(0.5),
+  },
+  cardSaleTimer: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    zIndex: 10,
+    paddingInline: theme.spacing(1),
+    paddingBlock: theme.spacing(0.5),
+    borderRadius: '15px',
+    backgroundColor: (theme.palette.type === 'light') ? theme.palette.primary.main : 'gray',
+    color: '#fafafa'
+  }
 }));

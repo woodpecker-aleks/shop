@@ -10,7 +10,19 @@
   margin: 0;
 }
 
+.swiper-pagination-bullet.swiper-pagination-bullet-active {
+  background-color: #115293;
+}
 
 .MuiPaper-root .swiper-container {
   height: 250px;
+}
+
+.swiper-button-prev {
+  color: inherit;
+  left: 0;
+}
+.swiper-button-next {
+  color: inherit;
+  right: 0;
 }

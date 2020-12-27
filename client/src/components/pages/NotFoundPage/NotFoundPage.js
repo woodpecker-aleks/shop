@@ -250,22 +250,25 @@ function NotFoundPage() {
         }</ul>
       </div>
       <Button onClick={async () => {
-        const res = await fetch('/api/products', {
+        const res = await fetch('/api/product/update', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             filter: {
-              categories: [
-                'apple',
-                'xiaomi'
-              ]
+              name: "Apple MacBook Pro 16 (2019)"
             },
+            new: {
+              sale: {
+                start: new Date(),
+                price: 6999,
+                end: Date.parse('2021-01-26T13:51:50.417-07:00')
+              }
+            }
           })
         });
-        const data = await res.json();
-        console.log(data);
+        console.log(res);
       }}>Mobile</Button>
     </div>
   )

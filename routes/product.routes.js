@@ -3,6 +3,20 @@ const Product = require('../models/Product');
 const router = Router();
 const colors = require('colors');
 
+router.post('/product/update', async (req, res) => {
+  try {
+    const product = req.body;
+
+    const updatedProduct = await Product.updateOne(product.filter, product.new);
+
+    res.sendStatus(200);
+  } catch (err) {
+    const date = new Date();
+    console.log(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Error from POST /api/product function:\n${err}`.red);
+    res.sendStatus(500);
+  }
+});
+
 router.post('/product', async (req, res) => {
   try {
     const product = req.body;
@@ -39,13 +53,18 @@ router.get('/product/:id', async (req, res) => {
 
 router.post('/products', async (req, res) => {
   try {
-    const { filter, length, range, sort } = req.body;
+    const { filter, max, range, sort } = req.body;
 
     const queryFilter = {...filter};
     if (filter.options) delete queryFilter.options;
     if (filter.categories) delete queryFilter.categories;
+    if (filter.sale) delete queryFilter.sale;
 
     let query = Product.find(queryFilter);
+
+    if (filter.categories) {
+      query.where('categories').all(filter.categories);
+    }
 
     if (filter.options) {
       query.where('options').elemMatch(el => {
@@ -53,8 +72,8 @@ router.post('/products', async (req, res) => {
       });
     }
 
-    if (filter.categories) {
-      query.where('categories').in(filter.categories);
+    if (filter.sale) {
+      query.exists('sale');
     }
 
     const products = await query;
@@ -105,8 +124,8 @@ router.post('/products', async (req, res) => {
         }
         if (option === 'popular') {
           products.sort((a, b) => {
-            const aRating = a.rating;
-            const bRating = b.rating;
+            const aRating = a.rating.reduce((accum, curr) => (accum + curr), 0) / a.rating.length;
+            const bRating = b.rating.reduce((accum, curr) => (accum + curr), 0) / a.rating.length;
 
             if (aRating < bRating) return 1;
             else if (aRating > bRating) return -1;
@@ -116,7 +135,7 @@ router.post('/products', async (req, res) => {
       });
     }
 
-    if (length) products.length = length;
+    if (max && products.length > max) products.length = max;
 
     if (range) products = products.slice(...range);
 
