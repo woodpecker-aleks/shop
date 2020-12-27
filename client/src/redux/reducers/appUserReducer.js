@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { DELETE, ERROR, GET, IDLE, LOADING, POST, SUCCESS } from '../constants';
+import { DELETE, ERROR, GET, IDLE, LOADING, POST, SUCCESS } from '../../constants';
 
 export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async (token) => {
   const res = await fetch('/api/user', {
@@ -52,14 +52,14 @@ const appUserSlice = createSlice({
       state.status = LOADING;
     },
     [getFetchUser.fulfilled]: (state, action) => {
-      const { firstName, lastName, phone, email, avatar } = action.payload;
+      const { avatar, phone, firstName, lastName, email } = action.payload;
 
-      state.status = SUCCESS;
+      state.avatar = avatar;
+      state.phone = phone;
       state.firstName = firstName;
       state.lastName = lastName;
-      state.phone = phone;
       state.email = email;
-      state.avatar = avatar;
+      state.status = SUCCESS;
     },
     [getFetchUser.rejected]: (state, action) => {
       state.status = ERROR;
@@ -70,14 +70,14 @@ const appUserSlice = createSlice({
       state.status = LOADING;
     },
     [updateFetchUser.fulfilled]: (state, action) => {
-      const { firstName, lastName, phone, email, avatar } = action.payload;
+      const { avatar, phone, firstName, lastName, email } = action.payload;
 
-      state.status = SUCCESS;
+      state.avatar = avatar;
+      state.phone = phone;
       state.firstName = firstName;
       state.lastName = lastName;
-      state.phone = phone;
       state.email = email;
-      state.avatar = avatar;
+      state.status = SUCCESS;
     },
     [updateFetchUser.rejected]: (state, action) => {
       state.status = ERROR;
@@ -88,13 +88,7 @@ const appUserSlice = createSlice({
       state.status = LOADING;
     },
     [deleteFetchUser.fulfilled]: (state, action) => {
-
       state.status = SUCCESS;
-      state.firstName = null;
-      state.lastName = null;
-      state.phone = null;
-      state.email = null;
-      state.avatar = null;
     },
     [deleteFetchUser.rejected]: (state, action) => {
       state.status = ERROR;

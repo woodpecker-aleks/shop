@@ -1,10 +1,10 @@
 import { Typography } from "@material-ui/core";
-import BannerSlider from "../../BannerSlider/BannerSlider";
-import CardsSlider from "../../CardsSlider/CardsSlider";
+import BannerSlider from "../../components/BannerSlider/BannerSlider";
+import CardsSlider from "../../components/CardsSlider/CardsSlider";
 import { useStyles } from './HomePageClasses';
-import { useHttp } from '../../../hooks/http.hook';
+import { useHttp } from '../../hooks/http.hook';
 import { useEffect, useState } from 'react';
-import BransSlider from "../../BrandsSlider/BrandsSlider";
+import BransSlider from "../../components/BrandsSlider/BrandsSlider";
 
 function HomePage() {
   const classes = useStyles();
@@ -36,7 +36,7 @@ function HomePage() {
       max: 8,
       sort: ['newer']
     }).then(data => setNewProducts(data));
-  }, []);
+  }, [popularProductsRequest, newProductsRequest, saleProductsRequest]);
 
   return (<>
     <BannerSlider className={classes.bannerSlider} />

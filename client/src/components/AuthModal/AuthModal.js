@@ -2,8 +2,7 @@ import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogC
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHttp } from '../../hooks/http.hook';
-import { SwitchMany, SwitchOnce } from '../../jsxOperators';
-import { login } from '../../reducers/appAuthReducer';
+import { login } from '../../redux/reducers/appAuthReducer';
 import LoginForm from '../LoginForm/LoginForm';
 import RegisterForm from '../RegisterForm/RegisterForm';
 import { useStyles } from './AuthModalClasses';
@@ -40,6 +39,70 @@ function AuthModal(props) {
     clearError();
   }
 
+  let errorText = null;
+  if (error) {
+    errorText = <DialogContentText className={classes.loginError}>{error.message}</DialogContentText>;
+  }
+
+  let form = null;
+  if (tab === 'sing in') {
+    form = (
+      <LoginForm
+        onSubmit={loginHandler}
+        valid={setLoginIsValid}
+      />
+    )
+  } else {
+    form = (
+      <RegisterForm
+        onSubmit={registerHandler}
+        valid={setRegisterIsValid}
+      />
+    )
+  }
+
+  let actions = null;
+  if (tab === 'sing in') {
+    actions = (<>
+      <Button
+        type="submit"
+        form="login"
+        variant="outlined"
+        className={classes.submitBtn}
+        color="inherit"
+        disabled={loading || !loginIsValid}
+      >
+        {loading && <CircularProgress className={classes.progress} size={24} />}
+        Sing In
+      </Button>
+      <Button
+        onClick={() => setTab('sing up')}
+      >
+        Sing Up
+      </Button>
+    </>)
+  } else {
+    actions = (<>
+      <Button
+        onClick={() => setTab('sing in')}
+        disabled={loading}
+      >
+        Sing In
+      </Button>
+      <Button
+        type="submit"
+        form="register"
+        variant="outlined"
+        className={classes.submitBtn}
+        color="inherit"
+        disabled={loading || !registerIsValid}
+      >
+        {loading && <CircularProgress className={classes.progress} size={24} />}
+        Sing Up
+      </Button>
+    </>)
+  }
+
   return (
     <Dialog
       open={props.open}
@@ -53,73 +116,11 @@ function AuthModal(props) {
       </DialogTitle>
       <Divider />
       <DialogContent>
-
-        {SwitchMany()
-          .Case(error)(() => (
-            <DialogContentText className={classes.loginError}>{error.message}</DialogContentText>
-          ))
-          .Case(tab === 'sing in')(() => (
-            <LoginForm
-              onSubmit={loginHandler}
-              valid={setLoginIsValid}
-            />
-          ))
-          .Case(tab === 'sing up')(() => (
-            <RegisterForm
-              onSubmit={registerHandler}
-              valid={setRegisterIsValid}
-            />
-          ))
-          .End()
-        }
-
+        {errorText}
+        {form}
       </DialogContent>
       <DialogActions>
-
-        {SwitchOnce()
-          .Case(tab === 'sing in')(() => (<>
-          
-            <Button
-              type="submit"
-              form="login"
-              variant="outlined"
-              className={classes.submitBtn}
-              color="inherit"
-              disabled={loading || !loginIsValid}
-            >
-              {loading && <CircularProgress className={classes.progress} size={24} />}
-              Sing In
-            </Button>
-            <Button
-              onClick={() => setTab('sing up')}
-            >
-              Sing Up
-            </Button>
-
-          </>))
-          .Case(tab === 'sing up')(() => (<>
-
-            <Button
-              onClick={() => setTab('sing in')}
-              disabled={loading}
-            >
-              Sing In
-            </Button>
-            <Button
-              type="submit"
-              form="register"
-              variant="outlined"
-              className={classes.submitBtn}
-              color="inherit"
-              disabled={loading || !registerIsValid}
-            >
-              {loading && <CircularProgress className={classes.progress} size={24} />}
-              Sing Up
-            </Button>
-
-          </>))
-          .End()
-        }
+        {actions}
       </DialogActions>
     </Dialog>
   );

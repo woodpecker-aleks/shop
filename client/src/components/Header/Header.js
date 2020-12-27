@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useGlobalStyles from '../../globalClasses';
-import { toggleAppMenu } from '../../reducers/appMenuReducer';
+import { toggleAppMenu } from '../../redux/reducers/appMenuReducer';
 import AuthModal from '../AuthModal/AuthModal';
 import Logo from "../Logo/Logo";
 import Navigation from '../Navigation/Navigation';

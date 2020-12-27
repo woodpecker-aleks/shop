@@ -4,7 +4,6 @@ import { useStyles } from './ProductCardClasses';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { If } from '../../jsxOperators';
 import { Rating, Skeleton } from '@material-ui/lab';
 import { useEffect, useState } from 'react';
 
@@ -36,6 +35,9 @@ function ProductCard(props) {
     };
   });
 
+  let saleTimer = null;
+  if (saleTime) saleTimer = <div className={classes.cardSaleTimer}>Left {saleTime}</div>
+
   return (
     <Card
       classes={{
@@ -43,10 +45,8 @@ function ProductCard(props) {
       }}
       className={classes.card}
     >
-      {If(saleTime)(() => (
-        <div className={classes.cardSaleTimer}>Left {saleTime}</div>
-      )).End()}
-      {If(!loading)(() => (
+      {saleTimer}
+      {(!loading && (
         <Rating
           className={classes.cardRating}
           name="rating"
@@ -54,27 +54,26 @@ function ProductCard(props) {
           value={rating}
           size="small"
         />
-      )).End()}
+      ))}
       <CardActionArea
         component={Link}
         to={`/product/${card.url}`}
       >
-        {If(loading)(() => (
+        {(loading) ? (
           <Skeleton
             className={classes.imageSkelet}
             width="100%"
             height="180px"
           />
-        ))
-        .Else(() => (
+        ) : (
           <CardMedia
             className={classes.cardMedia}
             image={`/images/products/${card.mainImage}`}
             title={card.name}
           />
-        ))}
+        )}
         <CardContent className={classes.cardBody}>
-          {If(loading)(() => (<>
+          {(loading) ? (<>
             <Skeleton width="100%">
               <Typography
                 gutterBottom
@@ -97,8 +96,7 @@ function ProductCard(props) {
                 <li>...</li>
               </Typography>
             </Skeleton>
-          </>))
-          .Else(() => (<>
+          </>) : (<>
             <Typography
               gutterBottom
               variant="h5"
@@ -117,9 +115,9 @@ function ProductCard(props) {
               <li>Free shipping</li>
               <li>{card.options && card.options.find(opt => opt.name === 'Brand').value}</li>
             </Typography>
-          </>))}
+          </>)}
           <div className={classes.cardPrice}>
-            {If(saleTime)(() => (<>
+            {(saleTime) ? (<>
               <Badge
                 badgeContent="%"
                 color="primary"
@@ -143,8 +141,7 @@ function ProductCard(props) {
               >
                 {card.price}$
               </Typography>
-            </>))
-            .Else(() => (
+            </>) : (
               <Typography
                 variant="h6"
                 component="span"
@@ -152,7 +149,7 @@ function ProductCard(props) {
               >
                 {card.price}$
               </Typography>
-            ))}
+            )}
           </div>
           </CardContent>
         <Divider />

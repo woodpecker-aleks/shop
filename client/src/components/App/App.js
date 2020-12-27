@@ -4,15 +4,15 @@ import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { darkTheme, lightTheme } from '../../muiThemes';
-import { getFetchUser } from '../../reducers/appUserReducer';
+import { getFetchUser } from '../../redux/reducers/appUserReducer';
 import AppMenu from '../AppMenu/AppMenu';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
 import Header from '../Header/Header';
 import { useStyles } from './AppClasses';
 
-const HomePage = lazy(() => import('../pages/HomePage/HomePage'));
-const ProfilePage = lazy(() => import('../pages/ProfilePage/ProfilePage'));
-const NotFoundPage = lazy(() => import('../pages/NotFoundPage/NotFoundPage'));
+const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
+const ProfilePage = lazy(() => import('../../pages/ProfilePage/ProfilePage'));
+const NotFoundPage = lazy(() => import('../../pages/NotFoundPage/NotFoundPage'));
 
 function App() {
   const { theme, auth } = useSelector(store => ({

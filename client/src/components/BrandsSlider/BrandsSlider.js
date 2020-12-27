@@ -26,6 +26,10 @@ function BransSlider({ cards }) {
           onlyInViewport: true,
           pageUpDown: true,
         }}
+        autoplay={{
+          delay: 2500,
+          disableOnInteraction: false,
+        }}
       >
         {cards.map((card, index) => (
           <SwiperSlide

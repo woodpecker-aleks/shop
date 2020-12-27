@@ -11,8 +11,8 @@ import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { closeAppMenu } from "../../reducers/appMenuReducer";
-import { toggleAppTheme } from "../../reducers/appThemeReducer";
+import { closeAppMenu } from "../../redux/reducers/appMenuReducer";
+import { toggleAppTheme } from "../../redux/reducers/appThemeReducer";
 import AppMenuTab from '../AppMenuTab/AppMenuTab';
 import { useStyles } from './AppMenuClasses';
 

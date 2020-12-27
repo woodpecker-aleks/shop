@@ -5,11 +5,10 @@ import { useFormik } from "formik";
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { LOADING } from "../../../constants";
-import { logout } from '../../../reducers/appAuthReducer';
-import { deleteFetchUser, updateFetchUser } from '../../../reducers/appUserReducer';
+import { emailValidator, LOADING, phoneValidator, wordValidator } from "../../constants";
+import { logout } from '../../redux/reducers/appAuthReducer';
+import { deleteFetchUser, updateFetchUser } from '../../redux/reducers/appUserReducer';
 import useStyles from "./ProfilePageClasses";
-import { If } from '../../../jsxOperators';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 function ProfilePage() {
@@ -52,19 +51,19 @@ function ProfilePage() {
     validate(values) {
       const errors = {};
 
-      if (!/([A-Za-z0-9-]+)/.test(values.firstName)) {
+      if (!wordValidator.test(values.firstName)) {
         errors.firstName = 'Invalid first name'
       }
 
-      if (!/([A-Za-z0-9-]+)/.test(values.lastName)) {
+      if (values.lastName && !wordValidator.test(values.lastName)) {
         errors.lastName = 'Invalid first name'
       }
-
-      if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      
+      if (!emailValidator.test(values.email)) {
         errors.email = 'Invalid email adress';
       }
 
-      if (!/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/.test(values.phone)) {
+      if (values.phone && !phoneValidator.test(values.phone)) {
         errors.phone = 'Invalid phone number';
       }
 
@@ -130,7 +129,7 @@ function ProfilePage() {
           </>)}
         </div>
         <div className={classes.fieldGroup}>
-          {If(user.status === LOADING)(() => (<>
+          {(user.status === LOADING) ? (<>
             <Skeleton width="100%">
               <TextField className={classes.input} />
             </Skeleton>
@@ -143,10 +142,10 @@ function ProfilePage() {
             <Skeleton width="100%">
               <TextField className={classes.input} />
             </Skeleton>
-          </>))
-          .Else(() => (<>
+          </>) : (<>
             <TextField
               {...getFieldProps('firstName')}
+              defaultValue={user.firstName}
               label="First name"
               error={touched.firstName && errors.firstName}
               helperText={touched.firstName && errors.firstName}
@@ -158,6 +157,7 @@ function ProfilePage() {
             />
             <TextField
               {...getFieldProps('lastName')}
+              defaultValue={user.lastName}
               label="Last name"
               error={touched.lastName && errors.lastName}
               helperText={touched.lastName && errors.lastName}
@@ -169,6 +169,7 @@ function ProfilePage() {
             />
             <TextField
               {...getFieldProps('email')}
+              defaultValue={user.email}
               label="Email"
               error={touched.email && errors.email}
               helperText={touched.email && errors.email}
@@ -180,6 +181,7 @@ function ProfilePage() {
             />
             <TextField
               {...getFieldProps('phone')}
+              defaultValue={user.phone}
               label="Phone"
               error={touched.phone && errors.phone}
               helperText={touched.phone && errors.phone}
@@ -189,7 +191,7 @@ function ProfilePage() {
                 readOnly: isReadOnly
               }}
             />
-          </>))}
+          </>)}
           <input
             ref={fileField}
             className={classes.fileInput}

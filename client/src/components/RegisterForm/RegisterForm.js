@@ -3,12 +3,13 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useFormik } from "formik";
 import { useState } from "react";
+import { emailValidator, passwordValidator, phoneValidator, wordValidator } from "../../constants";
 import { useStyles } from './RegisterFormClasses';
 
 function RegisterForm(props) {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles(props)
-
+  
   const { touched, errors, handleSubmit, getFieldProps } = useFormik({
     initialValues: {
       email: '',
@@ -20,19 +21,19 @@ function RegisterForm(props) {
     },
     validate(values) {
       const errors = {};
-
+      
       if (!values.email) {
         errors.email = 'Email is required';
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      } else if (!emailValidator.test(values.email)) {
         errors.email = 'Invalid email adress';
       }
 
       if (!values.password) {
         errors.password = 'Password is required';
-      } else if (!/((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,})/.test(values.password)) {
+      } else if (!passwordValidator.test(values.password)) {
         errors.password = 'Invalid password';
       }
-
+      
       if (!values.confirmPassword) {
         errors.confirmPassword = 'Confirm password is required';
       } else if (values.password !== values.confirmPassword) {
@@ -40,11 +41,15 @@ function RegisterForm(props) {
       }
       if (!values.firstName) {
         errors.firstName = 'First name is required';
-      } else if (!/([A-Za-z0-9-]+)/.test(values.firstName)) {
+      } else if (!wordValidator.test(values.firstName)) {
         errors.firstName = 'Invalid first name';
       }
 
-      if (!/^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/.test(values.phone)) {
+      if (values.lastName && !wordValidator.test(values.lastName)) {
+        errors.lastName = 'Invalid last name';
+      }
+
+      if (values.phone && !phoneValidator.test(values.phone)) {
         errors.phone = 'Invalid phone number';
       }
 

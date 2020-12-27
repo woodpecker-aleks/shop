@@ -2,7 +2,6 @@ import { Breadcrumbs, Button } from '@material-ui/core';
 import ChevronRightRoundedIcon from '@material-ui/icons/ChevronRightRounded';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import { Link, Route } from 'react-router-dom';
-import { If } from '../../jsxOperators';
 import { useStyles } from './BreadcrumbClasses';
 
 function Breadcrumb(props) {
@@ -45,15 +44,13 @@ function Breadcrumb(props) {
               const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
               return (
-                If(last)(() => (
+                (last) ? (
 
                   <Button key={to}>
                     {breadcrumbNameMap[to]}
                   </Button>
                   
-                ))
-                .Else(() => (
-
+                ) : (
                   <Button
                     component={Link}
                     to={to}
@@ -61,8 +58,7 @@ function Breadcrumb(props) {
                   >
                     {breadcrumbNameMap[to]}
                   </Button>
-                  
-                ))
+                )
               )
             })}
           </Breadcrumbs>

@@ -4,7 +4,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import React from 'react';
 import { Link } from "react-router-dom";
-import { If } from '../../jsxOperators';
 import { useStyles } from './AppMenuTabClasses';
 
 function AppMenuTab(props) {
@@ -24,24 +23,10 @@ function AppMenuTab(props) {
     ItemConfig.component = Link;
   }
 
-  return (<>
-    <ListItem {...ItemConfig}>
-      <ListItemIcon className={classes.listItemIcon}>
-        {tab.tabIcon}
-      </ListItemIcon>
-      <ListItemText
-        primary={tab.tabPrimaryText}
-        secondary={tab.tabSecondaryText}
-      />
-      <ListItemSecondaryAction className={classes.listItemBody}>
-        {children}
-        {(tab.innerTabs) ? ((dropdown === tab.tabPrimaryText) ? <ExpandLess className={classes.listItemArrow} /> : <ExpandMore className={classes.listItemArrow} />) : ''}
-      </ListItemSecondaryAction>
-    </ListItem>
-    {tab.afterBody}
-
-    {If(tab.innerTabs)(() => (
-    
+  let innerTabs = null;
+  
+  if (tab.innerTabs) {
+    innerTabs = (
       <Collapse
         in={dropdown === tab.tabPrimaryText}
         timeout="auto"
@@ -67,9 +52,25 @@ function AppMenuTab(props) {
         </List>
         <Divider />
       </Collapse>
+    )
+  }
 
-    )).End()}
-
+  return (<>
+    <ListItem {...ItemConfig}>
+      <ListItemIcon className={classes.listItemIcon}>
+        {tab.tabIcon}
+      </ListItemIcon>
+      <ListItemText
+        primary={tab.tabPrimaryText}
+        secondary={tab.tabSecondaryText}
+      />
+      <ListItemSecondaryAction className={classes.listItemBody}>
+        {children}
+        {(tab.innerTabs) ? ((dropdown === tab.tabPrimaryText) ? <ExpandLess className={classes.listItemArrow} /> : <ExpandMore className={classes.listItemArrow} />) : ''}
+      </ListItemSecondaryAction>
+    </ListItem>
+    {tab.afterBody}
+    {innerTabs}
   </>);
 }
 

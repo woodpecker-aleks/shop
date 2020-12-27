@@ -4,11 +4,12 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useFormik } from "formik";
 import { useState } from "react";
 import { useStyles } from './LoginFormClasses';
+import { emailValidator, passwordValidator } from '../../constants';
 
 function LoginForm(props) {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles(props);
-
+  
   const { errors, touched, getFieldProps, handleSubmit } = useFormik({
     initialValues: {
       email: '',
@@ -17,16 +18,16 @@ function LoginForm(props) {
     },
     validate(values) {
       const errors = {};
-
+      
       if (!values.email) {
         errors.email = 'Email is required';
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+      } else if (!emailValidator.test(values.email)) {
         errors.email = 'Invalid email adress';
       }
 
       if (!values.password) {
         errors.password = 'Password is required';
-      } else if (!/((?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,})/.test(values.password)) {
+      } else if (!passwordValidator.test(values.password)) {
         errors.password = 'Invalid password';
       }
 
