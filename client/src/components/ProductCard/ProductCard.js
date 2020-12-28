@@ -5,38 +5,13 @@ import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutline
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Rating, Skeleton } from '@material-ui/lab';
-import { useEffect, useState } from 'react';
+import ProductCardTimer from './ProductCardTimer';
 
 function ProductCard(props) {
   const classes = useStyles(props);
   const { card, loading, className } = props;
-  const [saleTime, setSaleTime] = useState(null);
   const rating = (!card.rating?.length) ? 0 :
     card.rating.reduce((accum, curr) => (accum + curr), 0) / card.rating.length;
-
-  useEffect(() => {
-    let timer = null;
-
-    if (card.sale) {
-      const saleEndTime = new Date(card.sale.end);
-
-      timer = setInterval(() => {
-        const currentTime = Date.now();
-
-        if (saleEndTime > currentTime) {
-          const saleTime = new Date(saleEndTime - currentTime);
-          setSaleTime(`${saleTime.getDate()}:${saleTime.getHours()}:${saleTime.getMinutes()}:${saleTime.getSeconds()}`);
-        } else timer = null;
-      }, 1000);
-    }
-
-    return () => {
-      clearInterval(timer);
-    };
-  });
-
-  let saleTimer = null;
-  if (saleTime) saleTimer = <div className={classes.cardSaleTimer}>Left {saleTime}</div>
 
   return (
     <Card
@@ -45,7 +20,9 @@ function ProductCard(props) {
       }}
       className={classes.card}
     >
-      {saleTimer}
+      {(card.sale) && (
+        <ProductCardTimer sale={card.sale} />
+      )}
       {(!loading && (
         <Rating
           className={classes.cardRating}
@@ -117,7 +94,7 @@ function ProductCard(props) {
             </Typography>
           </>)}
           <div className={classes.cardPrice}>
-            {(saleTime) ? (<>
+            {(card.sale) ? (<>
               <Badge
                 badgeContent="%"
                 color="primary"

@@ -14,6 +14,13 @@ function HomePage() {
   const [popularProducts, setPopularProducts] = useState([1,2,3,4]);
   const [saleProducts, setSaleProducts] = useState([1,2,3,4]);
   const [newProducts, setNewProducts] = useState([1,2,3,4]);
+  const brands = [
+    "/images/brands/mi.jpg",
+    "/images/brands/apple.jpg",
+    "/images/brands/samsung.jpg",
+    "/images/brands/lg.jpg",
+    "/images/brands/sony.jpg"
+  ]
 
   useEffect(() => {
     document.title = 'Home Page';
@@ -67,13 +74,7 @@ function HomePage() {
     >
       Brands
     </Typography>
-    <BransSlider cards={[
-      "/images/brands/mi.jpg",
-      "/images/brands/apple.jpg",
-      "/images/brands/samsung.jpg",
-      "/images/brands/lg.jpg",
-      "/images/brands/sony.jpg"
-    ]} />
+    <BransSlider cards={brands} />
   </>);
 }
 
