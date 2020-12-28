@@ -1,13 +1,14 @@
 import { Breadcrumbs, Button } from '@material-ui/core';
 import ChevronRightRoundedIcon from '@material-ui/icons/ChevronRightRounded';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
+import { useMemo } from 'react';
 import { Link, Route } from 'react-router-dom';
 import { useStyles } from './BreadcrumbClasses';
 
 function Breadcrumb(props) {
   const classes = useStyles(props);
 
-  const breadcrumbNameMap = {
+  const breadcrumbNameMap = useMemo(() => ({
     '/sales': 'Sales',
     '/support': 'Support',
     '/about': 'About',
@@ -16,8 +17,8 @@ function Breadcrumb(props) {
     '/mobile': 'Mobile',
     '/laptop': 'Laptop',
     '/cart': 'Cart',
-    '/mobile/product': 'Product',
-  };
+    '/product': 'Product'
+  }), []);
 
   return (
     <Route>

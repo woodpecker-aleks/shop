@@ -3,7 +3,7 @@ import { Skeleton } from "@material-ui/lab";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
-import { LOADING } from "../../constants";
+import { SUCCESS } from "../../constants";
 import { logout } from '../../redux/reducers/appAuthReducer';
 import { useStyles } from "./ProfileModalClasses";
 
@@ -28,7 +28,7 @@ function ProfileModal() {
   }
 
   let profileModal = null;
-  if (user.status === LOADING) {
+  if (user.status !== SUCCESS) {
     profileModal = (
       <Skeleton variant="circle">
         <Avatar />

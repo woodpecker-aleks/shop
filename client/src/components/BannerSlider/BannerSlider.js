@@ -4,17 +4,18 @@ import SwiperCore, { Navigation, EffectFade, Autoplay, Keyboard } from 'swiper';
 import 'swiper/swiper-bundle.css';
 import '../../css/swiper.css';
 import { Paper } from '@material-ui/core';
+import { useMemo } from 'react';
 
 SwiperCore.use([Navigation, EffectFade, Autoplay, Keyboard]);
 
 function BannerSlider(props) {
-  const images = [
+  const images = useMemo(() => ([
     '/images/banners/banner1.jpg',
     '/images/banners/banner2.jpg',
     '/images/banners/banner3.jpg',
     '/images/banners/banner4.jpg',
     '/images/banners/banner5.jpg'
-  ];
+  ]), []);
 
   return (<>
     <Paper className={props.className}>

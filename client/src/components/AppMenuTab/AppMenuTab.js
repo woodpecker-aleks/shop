@@ -2,21 +2,21 @@ import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemSecondaryActio
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from "react-router-dom";
 import { useStyles } from './AppMenuTabClasses';
 
 function AppMenuTab(props) {
   const classes = useStyles(props);
-  const { onClick, children, dropdown, tab, innerListClass, value} = props;
+  const { onClick, children, dropdown, tab, innerListClass, value, className} = props;
 
-  const ItemConfig = {
+  const ItemConfig = useMemo(() => ({
     value: value,
     component: "li",
     button: true,
     onClick: (e) => onClick.forEach(func => func?.(e)),
-    className: clsx(innerListClass, classes.root, props.className),
-  }
+    className: clsx(innerListClass, classes.root, className),
+  }), [classes.root, innerListClass, onClick, className, value]);
 
   if (tab.linkTo) {
     ItemConfig.to = tab.linkTo;

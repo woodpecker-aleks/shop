@@ -4,12 +4,20 @@ import 'swiper/swiper-bundle.css';
 import ProductCard from '../ProductCard/ProductCard';
 import { useStyles } from './CardsSliderClasses';
 import '../../css/swiper.css';
-
+import { useEffect, useState } from 'react'
+import { useHttp } from '../../hooks/http.hook';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Keyboard]);
 
-function CardsSlider({ cards, loading }) {
+function CardsSlider({ filter }) {
   const classes = useStyles();
+  const slideStyles = { listStyle: 'none' }
+  const [cards, setCards] = useState([1,2,3,4]);
+  const { request, status } = useHttp();
+
+  useEffect(() => {
+    request('/api/products', 'POST', filter).then(data => setCards(data));
+  }, [request, filter]);
 
   return (<>
     <Swiper
@@ -35,9 +43,13 @@ function CardsSlider({ cards, loading }) {
           className={classes.slide}
           key={card._id ?? index}
           tag="li"
-          style={{ listStyle: 'none' }}
+          style={slideStyles}
         >
-          <ProductCard className={classes.slideCard} card={card} loading={loading} />
+          <ProductCard
+            className={classes.slideCard}
+            card={card}
+            status={status}
+          />
         </SwiperSlide>
       ))}
     </Swiper>

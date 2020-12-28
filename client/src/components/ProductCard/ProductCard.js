@@ -6,10 +6,11 @@ import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Rating, Skeleton } from '@material-ui/lab';
 import ProductCardTimer from './ProductCardTimer';
+import { SUCCESS } from '../../constants';
 
 function ProductCard(props) {
   const classes = useStyles(props);
-  const { card, loading, className } = props;
+  const { card, status, className } = props;
   const rating = (!card.rating?.length) ? 0 :
     card.rating.reduce((accum, curr) => (accum + curr), 0) / card.rating.length;
 
@@ -23,7 +24,7 @@ function ProductCard(props) {
       {(card.sale) && (
         <ProductCardTimer sale={card.sale} />
       )}
-      {(!loading && (
+      {(status === SUCCESS) && (
         <Rating
           className={classes.cardRating}
           name="rating"
@@ -31,12 +32,12 @@ function ProductCard(props) {
           value={rating}
           size="small"
         />
-      ))}
+      )}
       <CardActionArea
         component={Link}
         to={`/product/${card.url}`}
       >
-        {(loading) ? (
+        {(status !== SUCCESS) ? (
           <Skeleton
             className={classes.imageSkelet}
             width="100%"
@@ -50,7 +51,7 @@ function ProductCard(props) {
           />
         )}
         <CardContent className={classes.cardBody}>
-          {(loading) ? (<>
+          {(status !== SUCCESS) ? (<>
             <Skeleton width="100%">
               <Typography
                 gutterBottom

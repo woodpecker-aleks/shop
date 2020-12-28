@@ -9,7 +9,7 @@ import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
 import PhoneInTalkOutlinedIcon from '@material-ui/icons/PhoneInTalkOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { closeAppMenu } from "../../redux/reducers/appMenuReducer";
 import { toggleAppTheme } from "../../redux/reducers/appThemeReducer";
@@ -37,7 +37,7 @@ function AppMenu() {
     if (event.target.classList.contains('MuiBackdrop-root')) dispatch( closeAppMenu() );
   }
 
-  const MenuInterface = [
+  const MenuInterface = useMemo(() => ([
     {
       tabIcon: <AccountCircleOutlinedIcon fontSize="large" />,
       tabPrimaryText: 'Profile',
@@ -132,7 +132,7 @@ function AppMenu() {
         },
       ]
     },
-  ];
+  ]), [auth.isAuth, dispatch, theme, classes.switchThumb]);
 
   return (
     <Backdrop

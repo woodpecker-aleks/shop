@@ -37,9 +37,9 @@ router.post('/product', async (req, res) => {
   }
 });
 
-router.get('/product/:id', async (req, res) => {
+router.get('/product/:url', async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ url: req.params.url });
 
     if (!product) return res.status(404);
 

@@ -1,11 +1,13 @@
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useStyles } from './NavigationClasses';
+import clsx from 'clsx';
+import { useMemo } from "react";
 
-function Navigation() {
+function Navigation({ className }) {
   const classes = useStyles();
 
-  const NavigationInterface = [
+  const NavigationInterface = useMemo(() => ([
     {
       name: 'Sales',
       linkTo: '/sales',
@@ -22,10 +24,10 @@ function Navigation() {
       name: 'Brands',
       linkTo: '/brands',
     },
-  ];
+  ]), []);
 
   return (
-    <nav className={classes.root}>
+    <nav className={clsx(classes.root, className)}>
       {NavigationInterface.map(route => (route.condition || route.condition === undefined) && (
         <Button
           className={classes.navLink}

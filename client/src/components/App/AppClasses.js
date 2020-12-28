@@ -8,7 +8,9 @@ export const useStyles = makeStyles(theme => ({
   appBody: {
     minHeight: '100vh',
     position: 'relative',
-    backgroundColor: props => (props.theme === 'light') ? '#f3f3f3' : '#212121'
+    backgroundColor: props => (props.theme === 'light') ? '#f3f3f3' : '#212121',
+    display: 'flex',
+    flexDirection: 'column'
   },
   loader: {
     position: 'absolute',

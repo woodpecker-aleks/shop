@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
+import { ERROR, IDLE, LOADING, SUCCESS } from '../constants';
 
 export const useHttp = () => {
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState(IDLE);
   const [error, setError] = useState(null);
 
   const clearError = useCallback(() => setError(null), []);
   const request = useCallback( async (url, method = 'GET', body = null, headers = {}) => {
-    setLoading(true);
+    setStatus(LOADING);
     
     try {
       if (body) {
@@ -19,14 +20,14 @@ export const useHttp = () => {
 
       if (!res.ok) throw new Error(data.message || 'Bad request');
 
-      setLoading(false);
+      setStatus(SUCCESS);
 
       return data;
     } catch (err) {
-      setLoading(false);
+      setStatus(ERROR);
       setError(err);
     }
   }, []);
 
-  return { loading, request, error, clearError, setError };
+  return { status, request, error, clearError, setError };
 }
