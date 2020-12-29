@@ -1,5 +1,5 @@
-import { CircularProgress, Container, createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { Suspense, useEffect, useMemo } from 'react';
+import { Container, createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { useEffect, useMemo, useState, memo } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import { darkTheme, lightTheme } from '../../muiThemes';
@@ -18,7 +18,7 @@ function App() {
   }));
   const dispatch = useDispatch();
   const { isAuth, token } = auth;
-  const activeTheme = createMuiTheme((theme.type === 'light') ? lightTheme : darkTheme);
+  const [appTheme, setTheme] = useState(createMuiTheme( lightTheme ));
   const classes = useStyles({ theme: theme.type });
   const scrollbarStyles = useMemo(() => ({ width: '100vw', height: '100vh' }), []);
 
@@ -26,9 +26,17 @@ function App() {
     if (isAuth) dispatch( getFetchUser(token) );
   }, [isAuth, token, dispatch]);
 
+  useEffect(() => {
+    if (theme.type === 'light') {
+      setTheme( createMuiTheme(lightTheme) );
+    } else {
+      setTheme( createMuiTheme(darkTheme) );
+    }
+  }, [theme.type]);
+
   return (
     <Scrollbars style={scrollbarStyles}>
-      <ThemeProvider theme={activeTheme}>
+      <ThemeProvider theme={appTheme}>
         <Header />
         <AppMenu />
         <div className={classes.appBody}>
@@ -36,10 +44,8 @@ function App() {
             component="main"
             className={classes.main}
           >
-            <Suspense fallback={<CircularProgress className={classes.loader} />}>
-              <Breadcrumb />
-              <RouterController />
-            </Suspense>
+            <Breadcrumb />
+            <RouterController />
           </Container>
           <Footer />
         </div>
@@ -48,4 +54,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);

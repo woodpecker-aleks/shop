@@ -1,3 +1,4 @@
+import { Paper } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useHttp } from "../../hooks/http.hook";
@@ -16,6 +17,9 @@ function ProductPage() {
 
   return (
     <div className={classes.root}>
+      <Paper className={classes.slider}>
+        adsfer
+      </Paper>
     </div>
   );
 }

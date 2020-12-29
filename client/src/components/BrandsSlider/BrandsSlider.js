@@ -4,6 +4,7 @@ import 'swiper/swiper-bundle.css';
 import '../../css/swiper.css';
 import { useStyles } from './BrandsSliderClasses';
 import { Paper } from '@material-ui/core';
+import { memo } from 'react';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Keyboard]);
 
@@ -18,7 +19,6 @@ function BransSlider({ cards }) {
         wrapperTag="ul"
         loop={(cards.length >= 4) ? true : false}
         speed={800}
-        navigation
         spaceBetween={0}
         slidesPerView={5}
         keyboard={{
@@ -48,4 +48,4 @@ function BransSlider({ cards }) {
     </Paper>
   </>)
 }
-export default BransSlider;
+export default memo(BransSlider);

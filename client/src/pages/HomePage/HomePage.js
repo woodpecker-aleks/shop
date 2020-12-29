@@ -2,7 +2,7 @@ import { Typography } from "@material-ui/core";
 import BannerSlider from "../../components/BannerSlider/BannerSlider";
 import CardsSlider from "../../components/CardsSlider/CardsSlider";
 import { useStyles } from './HomePageClasses';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, memo } from 'react';
 import BransSlider from "../../components/BrandsSlider/BrandsSlider";
 
 function HomePage() {
@@ -77,4 +77,4 @@ function HomePage() {
   </>);
 }
 
-export default HomePage;
+export default memo(HomePage);

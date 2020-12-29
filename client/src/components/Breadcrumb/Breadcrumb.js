@@ -1,7 +1,7 @@
 import { Breadcrumbs, Button } from '@material-ui/core';
 import ChevronRightRoundedIcon from '@material-ui/icons/ChevronRightRounded';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 import { Link, Route } from 'react-router-dom';
 import { useStyles } from './BreadcrumbClasses';
 
@@ -48,7 +48,7 @@ function Breadcrumb(props) {
                 (last) ? (
 
                   <Button key={to}>
-                    {breadcrumbNameMap[to]}
+                    {breadcrumbNameMap[to] ?? path}
                   </Button>
                   
                 ) : (
@@ -69,4 +69,4 @@ function Breadcrumb(props) {
   );
 }
 
-export default Breadcrumb;
+export default memo(Breadcrumb);

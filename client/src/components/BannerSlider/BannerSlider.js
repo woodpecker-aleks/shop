@@ -4,7 +4,7 @@ import SwiperCore, { Navigation, EffectFade, Autoplay, Keyboard } from 'swiper';
 import 'swiper/swiper-bundle.css';
 import '../../css/swiper.css';
 import { Paper } from '@material-ui/core';
-import { useMemo } from 'react';
+import { useMemo, memo } from 'react';
 
 SwiperCore.use([Navigation, EffectFade, Autoplay, Keyboard]);
 
@@ -53,4 +53,4 @@ function BannerSlider(props) {
     </Paper>
   </>)
 }
-export default BannerSlider;
+export default memo(BannerSlider);

@@ -9,7 +9,7 @@ import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
 import PhoneInTalkOutlinedIcon from '@material-ui/icons/PhoneInTalkOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, memo } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { closeAppMenu } from "../../redux/reducers/appMenuReducer";
 import { toggleAppTheme } from "../../redux/reducers/appThemeReducer";
@@ -167,4 +167,4 @@ function AppMenu() {
   );
 }
 
-export default AppMenu;
+export default memo(AppMenu);

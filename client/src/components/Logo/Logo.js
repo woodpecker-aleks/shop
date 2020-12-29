@@ -1,5 +1,6 @@
 import { IconButton, makeStyles } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
+import { memo } from 'react'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,4 +32,4 @@ function Logo(props) {
   );
 }
 
-export default Logo;
+export default memo(Logo);

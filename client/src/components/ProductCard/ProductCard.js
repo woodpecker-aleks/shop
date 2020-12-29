@@ -7,13 +7,16 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Rating, Skeleton } from '@material-ui/lab';
 import ProductCardTimer from './ProductCardTimer';
 import { SUCCESS } from '../../constants';
+import { memo, useMemo } from 'react';
 
 function ProductCard(props) {
   const classes = useStyles(props);
   const { card, status, className } = props;
-  const rating = (!card.rating?.length) ? 0 :
-    card.rating.reduce((accum, curr) => (accum + curr), 0) / card.rating.length;
-
+  const rating = useMemo(() => {
+    if (!card.rating?.length) return 0;
+    else return card.rating.reduce((accum, curr) => (accum + curr), 0);
+  }, [card.rating]);
+  
   return (
     <Card
       classes={{
@@ -151,4 +154,4 @@ function ProductCard(props) {
   );
 }
 
-export default ProductCard;
+export default memo(ProductCard);

@@ -4,7 +4,7 @@ import 'swiper/swiper-bundle.css';
 import ProductCard from '../ProductCard/ProductCard';
 import { useStyles } from './CardsSliderClasses';
 import '../../css/swiper.css';
-import { useEffect, useState } from 'react'
+import { useEffect, useState, memo } from 'react'
 import { useHttp } from '../../hooks/http.hook';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Keyboard]);
@@ -55,4 +55,4 @@ function CardsSlider({ filter }) {
     </Swiper>
   </>)
 }
-export default CardsSlider;
+export default memo(CardsSlider);

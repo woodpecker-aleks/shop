@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { useStyles } from './ProductCardClasses';
 
 function ProductCardTimer({ sale }) {
@@ -32,4 +32,4 @@ function ProductCardTimer({ sale }) {
   return saleTimer;
 }
 
-export default ProductCardTimer;
+export default memo(ProductCardTimer);

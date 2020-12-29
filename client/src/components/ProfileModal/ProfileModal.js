@@ -1,6 +1,6 @@
 import { Avatar, Button, Divider, IconButton, Popover } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
 import { SUCCESS } from "../../constants";
@@ -69,4 +69,4 @@ function ProfileModal() {
   return profileModal;
 }
 
-export default ProfileModal;
+export default memo(ProfileModal);

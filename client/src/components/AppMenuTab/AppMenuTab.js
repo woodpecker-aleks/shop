@@ -2,7 +2,7 @@ import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemSecondaryActio
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Link } from "react-router-dom";
 import { useStyles } from './AppMenuTabClasses';
 
@@ -74,4 +74,4 @@ function AppMenuTab(props) {
   </>);
 }
 
-export default AppMenuTab;
+export default memo(AppMenuTab);

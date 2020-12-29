@@ -2,7 +2,7 @@ import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { useStyles } from './NavigationClasses';
 import clsx from 'clsx';
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
 function Navigation({ className }) {
   const classes = useStyles();
@@ -44,4 +44,4 @@ function Navigation({ className }) {
   );
 }
 
-export default Navigation;
+export default memo(Navigation);

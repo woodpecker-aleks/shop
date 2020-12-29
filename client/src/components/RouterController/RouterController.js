@@ -1,6 +1,8 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { lazy, useMemo } from 'react';
+import { lazy, useMemo, memo, Suspense } from 'react';
 import { useSelector } from 'react-redux';
+import { CircularProgress } from '@material-ui/core';
+import { useStyles } from './RouterControllerClasses';
 
 const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
 const ProfilePage = lazy(() => import('../../pages/ProfilePage/ProfilePage'));
@@ -9,6 +11,7 @@ const ProductPage = lazy(() => import('../../pages/ProductPage/ProductPage'));
 
 function RouterController() {
   const isAuth = useSelector(store => store.appAuth.isAuth);
+  const classes = useStyles();
 
   const AppRoutes = useMemo(() => ([
     {
@@ -32,18 +35,20 @@ function RouterController() {
   ]), [isAuth]);
 
   return (
-    <Switch>
-      {AppRoutes.map(route => (route.condition || route.condition === undefined) && (
-        <Route
-          key={route.path}
-          exact={route.exact}
-          path={route.path}
-          component={route.component}
-        />
-      ))}
-      <Redirect to="not-found" />
-    </Switch>
+    <Suspense fallback={<CircularProgress className={classes.loader} />}>
+      <Switch>
+        {AppRoutes.map(route => (route.condition || route.condition === undefined) && (
+          <Route
+            key={route.path}
+            exact={route.exact}
+            path={route.path}
+            component={route.component}
+          />
+        ))}
+        <Redirect to="not-found" />
+      </Switch>
+    </Suspense>
   )
 }
 
-export default RouterController;
+export default memo(RouterController);
