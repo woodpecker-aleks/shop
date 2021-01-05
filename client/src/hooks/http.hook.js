@@ -1,12 +1,12 @@
 import { useState, useCallback } from 'react';
-import { ERROR, IDLE, LOADING, SUCCESS } from '../constants';
+import { ERROR, GET, IDLE, LOADING, SUCCESS } from '../constants';
 
 export const useHttp = () => {
   const [status, setStatus] = useState(IDLE);
   const [error, setError] = useState(null);
 
   const clearError = useCallback(() => setError(null), []);
-  const request = useCallback( async (url, method = 'GET', body = null, headers = {}) => {
+  const request = useCallback( async (url, method = GET, body = null, headers = {}) => {
     setStatus(LOADING);
     
     try {

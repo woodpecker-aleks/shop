@@ -6,9 +6,8 @@ import React, { useMemo, memo } from 'react';
 import { Link } from "react-router-dom";
 import { useStyles } from './AppMenuTabClasses';
 
-function AppMenuTab(props) {
+function AppMenuTab({ onClick, children, dropdown, tab, innerListClass, value, className, ...props }) {
   const classes = useStyles(props);
-  const { onClick, children, dropdown, tab, innerListClass, value, className} = props;
 
   const ItemConfig = useMemo(() => ({
     value: value,
@@ -23,8 +22,7 @@ function AppMenuTab(props) {
     ItemConfig.component = Link;
   }
 
-  let innerTabs = null;
-  
+  let innerTabs;
   if (tab.innerTabs) {
     innerTabs = (
       <Collapse
@@ -66,7 +64,7 @@ function AppMenuTab(props) {
       />
       <ListItemSecondaryAction className={classes.listItemBody}>
         {children}
-        {(tab.innerTabs) ? ((dropdown === tab.tabPrimaryText) ? <ExpandLess className={classes.listItemArrow} /> : <ExpandMore className={classes.listItemArrow} />) : ''}
+        {tab.innerTabs ? (dropdown === tab.tabPrimaryText ? <ExpandLess className={classes.listItemArrow} /> : <ExpandMore className={classes.listItemArrow} />) : ''}
       </ListItemSecondaryAction>
     </ListItem>
     {tab.afterBody}

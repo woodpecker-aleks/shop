@@ -1,13 +1,15 @@
 import { useEffect, useState, memo } from 'react';
 import { useStyles } from './ProductCardClasses';
+import moment from 'moment';
+import clsx from 'clsx';
 
-function ProductCardTimer({ sale }) {
+function ProductCardTimer({ sale, className }) {
   const classes = useStyles();
   const [saleTime, setSaleTime] = useState(null);
 
   useEffect(() => {
     let timer = null;
-
+    
     if (sale) {
       const saleEndTime = new Date(sale.end);
 
@@ -16,7 +18,7 @@ function ProductCardTimer({ sale }) {
 
         if (saleEndTime > currentTime) {
           const saleTime = new Date(saleEndTime - currentTime);
-          setSaleTime(`${saleTime.getDate()}:${saleTime.getHours()}:${saleTime.getMinutes()}:${saleTime.getSeconds()}`);
+          setSaleTime(moment(saleTime).format('[in] DD:hh:mm:ss'));
         } else timer = null;
       }, 1000);
     }
@@ -24,10 +26,10 @@ function ProductCardTimer({ sale }) {
     return () => {
       clearInterval(timer);
     };
-  });
+  }, [sale]);
 
   let saleTimer = null;
-  if (saleTime) saleTimer = <div className={classes.cardSaleTimer}>LEFT {saleTime}</div>
+  if (saleTime) saleTimer = <div className={clsx(classes.cardSaleTimer, className)}>{saleTime}</div>
 
   return saleTimer;
 }

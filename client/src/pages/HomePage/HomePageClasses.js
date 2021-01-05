@@ -4,8 +4,8 @@ export const useStyles = makeStyles(theme => ({
   bannerSlider: {
     marginBottom: theme.spacing(5),
     marginTop: theme.spacing(2),
+    marginInline: theme.spacing(1.5),
     height: '100%',
-    width: '100%',
   },
   title: {
     fontSize: 24,

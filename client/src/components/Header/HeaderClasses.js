@@ -25,5 +25,5 @@ export const useStyles = makeStyles(theme => ({
 
   loginButton: {
     marginLeft: theme.spacing(1)
-  }
+  },
 }));

@@ -4,16 +4,20 @@ import 'swiper/swiper-bundle.css';
 import ProductCard from '../ProductCard/ProductCard';
 import { useStyles } from './CardsSliderClasses';
 import '../../css/swiper.css';
-import { useEffect, useState, memo } from 'react'
+import { useEffect, useState, memo, useMemo } from 'react'
 import { useHttp } from '../../hooks/http.hook';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Keyboard]);
 
-function CardsSlider({ filter }) {
+function CardsSlider({ filter, ...props }) {
   const classes = useStyles();
   const slideStyles = { listStyle: 'none' }
   const [cards, setCards] = useState([1,2,3,4]);
   const { request, status } = useHttp();
+  const swiperConfig = useMemo(() => {
+    if (cards.length >= 4) return { navigation: true }
+    else return {}
+  }, [cards.length]);
 
   useEffect(() => {
     request('/api/products', 'POST', filter).then(data => setCards(data));
@@ -26,7 +30,6 @@ function CardsSlider({ filter }) {
       wrapperTag="ul"
       loop={(cards.length >= 4) ? true : false}
       speed={800}
-      navigation
       pagination={(cards.length >= 4) ? {
         clickable: true,
       } : false}
@@ -37,6 +40,7 @@ function CardsSlider({ filter }) {
         onlyInViewport: true,
         pageUpDown: true,
       }}
+      {...swiperConfig}
     >
       {cards.map((card, index) => (
         <SwiperSlide
@@ -47,7 +51,7 @@ function CardsSlider({ filter }) {
         >
           <ProductCard
             className={classes.slideCard}
-            card={card}
+            product={card}
             status={status}
           />
         </SwiperSlide>

@@ -6,7 +6,12 @@ const schema = new Schema({
   lastName: String,
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  phone: String
+  phone: String,
+  likedProducts: { type: [String], default: [] },
+  card: [{
+    product: { type: Types.ObjectId, required: true },
+    count: { type: Number, default: 1, required: true }
+  }]
 });
 
 module.exports = model('User', schema);

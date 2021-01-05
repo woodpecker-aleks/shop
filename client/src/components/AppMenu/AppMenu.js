@@ -9,22 +9,47 @@ import PhoneAndroidIcon from '@material-ui/icons/PhoneAndroid';
 import PhoneInTalkOutlinedIcon from '@material-ui/icons/PhoneInTalkOutlined';
 import SettingsOutlinedIcon from '@material-ui/icons/SettingsOutlined';
 import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
-import { useMemo, useState, memo } from 'react';
+import { useMemo, useState, memo, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { DOLLAR, EU, RUB, UAH, ZL } from "../../constants";
 import { closeAppMenu } from "../../redux/reducers/appMenuReducer";
 import { toggleAppTheme } from "../../redux/reducers/appThemeReducer";
 import AppMenuTab from '../AppMenuTab/AppMenuTab';
+import Select from "../Select/Select";
 import { useStyles } from './AppMenuClasses';
+import { switchCurrency } from '../../redux/reducers/appCurrencyReducer';
 
 function AppMenu() {
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState('');
-  const { isOpenAppMenu, theme, auth } = useSelector(store => ({
+
+  const { isOpenAppMenu, theme, auth, currency } = useSelector(store => ({
     isOpenAppMenu: store.appMenu.isOpen,
     theme: store.appTheme.type,
-    auth: store.appAuth
+    auth: store.appAuth,
+    currency: store.appCurrency
   }));
   const dispatch = useDispatch();
+
+  const currencyItems = useMemo(() => ([
+    { label: '€', value: EU },
+    { label: '₴', value: UAH },
+    { label: '$', value: DOLLAR },
+    { label: '₽', value: RUB },
+    { label: 'zł', value: ZL }
+  ]), []);
+
+  const dispatchChangeCurrency = useCallback(newValue => dispatch( switchCurrency(newValue) ), [dispatch]);
+  const dispatchToggleTheme = useCallback(() => dispatch( toggleAppTheme() ), [dispatch]);
+  const dispatchCloseMenu = useCallback(() => dispatch( closeAppMenu() ), [dispatch]);
+
+  const drawerClasses = useMemo(() => ({
+    paper: classes.paper,
+  }), [classes.paper]);
+
+  const switchClasses = useMemo(() => ({
+    thumb: classes.switchThumb,
+  }), [classes.switchThumb]);
 
   const openTab = event => {
     const value = event.currentTarget.getAttribute('value');
@@ -33,9 +58,9 @@ function AppMenu() {
     else setActiveTab(value);
   }
 
-  const handleBackdropClick = event => {
-    if (event.target.classList.contains('MuiBackdrop-root')) dispatch( closeAppMenu() );
-  }
+  const handleBackdropClick = useCallback(event => {
+    if (event.target.classList?.contains('MuiBackdrop-root')) dispatchCloseMenu();
+  }, [dispatchCloseMenu]);
 
   const MenuInterface = useMemo(() => ([
     {
@@ -43,9 +68,7 @@ function AppMenu() {
       tabPrimaryText: 'Profile',
       tabSecondaryText: 'Check your profile',
       condition: auth.isAuth,
-      onClick() {
-        dispatch( closeAppMenu() );
-      },
+      onClick: dispatchCloseMenu,
       linkTo: '/profile',
       afterBody: (
         <Divider />
@@ -54,17 +77,13 @@ function AppMenu() {
     {
       tabIcon: <NotificationsNoneOutlinedIcon />,
       tabPrimaryText: 'Notifications',
-      onClick() {
-        dispatch( closeAppMenu() );
-      },
+      onClick: dispatchCloseMenu,
       linkTo: '/notifications'
     },
     {
       tabIcon: <ShoppingCartOutlinedIcon />,
       tabPrimaryText: 'Cart',
-      onClick() {
-        dispatch( closeAppMenu() );
-      },
+      onClick: dispatchCloseMenu,
       linkTo: '/cart'
     },
     {
@@ -75,17 +94,13 @@ function AppMenu() {
         {
           tabIcon: <PhoneAndroidIcon />,
           tabPrimaryText: 'Mobile',
-          onClick() {
-            dispatch( closeAppMenu() );
-          },
+          onClick: dispatchCloseMenu,
           linkTo: '/mobile',
         },
         {
           tabIcon: <LaptopIcon />,
           tabPrimaryText: 'Laptop',
-          onClick() {
-            dispatch( closeAppMenu() );
-          },
+          onClick: dispatchCloseMenu,
           linkTo: '/laptop',
         },
       ]
@@ -117,22 +132,36 @@ function AppMenu() {
           tabSecondaryText: 'Dark/Light theme',
           body: (
             <Switch
-              checked={(theme === 'dark') ? true : false}
+              checked={theme === 'dark' ? true : false}
               edge="end"
-              onClick={() => dispatch( toggleAppTheme() )}
-              classes={{
-                thumb: classes.switchThumb,
-              }}
+              onClick={dispatchToggleTheme}
+              classes={switchClasses}
             />
           ),
         },
         {
           tabIcon: <EuroSymbolIcon />,
           tabPrimaryText: 'Switch currency',
+          body: (
+            <Select
+              defaultValue={currency}
+              items={currencyItems}
+              onChange={dispatchChangeCurrency}
+            />
+          )
         },
       ]
     },
-  ]), [auth.isAuth, dispatch, theme, classes.switchThumb]);
+  ]), [
+    auth.isAuth,
+    theme,
+    dispatchChangeCurrency,
+    currency,
+    currencyItems,
+    dispatchCloseMenu,
+    dispatchToggleTheme,
+    switchClasses
+  ]);
 
   return (
     <Backdrop
@@ -142,9 +171,7 @@ function AppMenu() {
     >
       <Drawer
         className={classes.root}
-        classes={{
-          paper: classes.paper,
-        }}
+        classes={drawerClasses}
         variant="persistent"
         anchor="left"
         open={isOpenAppMenu}

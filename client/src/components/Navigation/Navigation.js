@@ -4,7 +4,7 @@ import { useStyles } from './NavigationClasses';
 import clsx from 'clsx';
 import { useMemo, memo } from "react";
 
-function Navigation({ className }) {
+function Navigation({ className, ...props }) {
   const classes = useStyles();
 
   const NavigationInterface = useMemo(() => ([

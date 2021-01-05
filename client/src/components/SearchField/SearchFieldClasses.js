@@ -7,7 +7,7 @@ export const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     height: theme.spacing(5),
     width: '20%',
-    backgroundColor: (theme.palette.type === 'light') ? 'white' : theme.palette.primary.light,
+    backgroundColor: (theme.palette.type === 'light') ? '#fafafa' : theme.palette.primary.light,
   },
 
   input: {

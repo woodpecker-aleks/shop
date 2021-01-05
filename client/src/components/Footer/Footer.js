@@ -1,4 +1,5 @@
 import { Box, Container } from "@material-ui/core";
+import { memo } from "react";
 import Navigation from "../Navigation/Navigation";
 import { useStyles } from "./FooterClasses";
 
@@ -14,4 +15,4 @@ function Footer() {
   )
 }
 
-export default Footer;
+export default memo(Footer);

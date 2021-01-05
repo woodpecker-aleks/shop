@@ -27,16 +27,12 @@ const appAuthSlice = createSlice({
 
       localStorage.setItem('userData', JSON.stringify({ token, userId }));
 
-      state.token = token;
-      state.userId = userId;
-      state.isAuth = true;
+      return { token, userId, isAuth: true }
     },
     logout(state, action) {
       localStorage.removeItem('userData');
 
-      state.token = null;
-      state.userId = null;
-      state.isAuth = false;
+      return { token: null, userId: null, isAuth: false }
     }
   }
 });

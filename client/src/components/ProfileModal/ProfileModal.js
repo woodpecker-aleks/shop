@@ -1,6 +1,6 @@
 import { Avatar, Button, Divider, IconButton, Popover } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { useState, memo } from "react";
+import { useState, memo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
 import { SUCCESS } from "../../constants";
@@ -14,13 +14,9 @@ function ProfileModal() {
   const classes = useStyles();
   const history = useHistory();
   
-  const handleOpenModal = event => {
-    setModalEnchor(event.currentTarget);
-  }
+  const handleOpenModal = useCallback(event => setModalEnchor(event.currentTarget), [setModalEnchor]);
 
-  const handleCloseModal = () => {
-    setModalEnchor(null)
-  }
+  const handleCloseModal = useCallback(() => setModalEnchor(null), [setModalEnchor]);
 
   const handleLogout = () => {
     history.push('/');
@@ -39,6 +35,7 @@ function ProfileModal() {
       <IconButton
         color="inherit"
         onClick={handleOpenModal}
+        className={classes.avatarButton}
       >
         <Avatar src={user.avatar && `/images/avatars/${user.avatar}`} alt="avatar">
           {user.firstName && user.firstName[0]}

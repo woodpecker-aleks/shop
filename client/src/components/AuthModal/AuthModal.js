@@ -1,13 +1,13 @@
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@material-ui/core';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHttp } from '../../hooks/http.hook';
 import { login } from '../../redux/reducers/appAuthReducer';
-import LoginForm from '../LoginForm/LoginForm';
-import RegisterForm from '../RegisterForm/RegisterForm';
+import LoginForm from './LoginForm/LoginForm';
+import RegisterForm from './RegisterForm/RegisterForm';
 import { useStyles } from './AuthModalClasses';
 
-function AuthModal(props) {
+function AuthModal({ onClose, open, ...props }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [tab, setTab] = useState('sing in');
@@ -35,7 +35,7 @@ function AuthModal(props) {
 
   const closeHandler = () => {
     setTab('sing in');
-    props.onClose();
+    onClose();
     clearError();
   }
 
@@ -105,7 +105,7 @@ function AuthModal(props) {
 
   return (
     <Dialog
-      open={props.open}
+      open={open}
       onClose={closeHandler}
       aria-labelledby="sing in"
       aria-describedby="sing in to your account"
@@ -126,4 +126,4 @@ function AuthModal(props) {
   );
 }
 
-export default AuthModal;
+export default memo(AuthModal);

@@ -8,7 +8,7 @@ import { useMemo, memo } from 'react';
 
 SwiperCore.use([Navigation, EffectFade, Autoplay, Keyboard]);
 
-function BannerSlider(props) {
+function BannerSlider({ className, ...props }) {
   const images = useMemo(() => ([
     '/images/banners/banner1.jpg',
     '/images/banners/banner2.jpg',
@@ -17,10 +17,12 @@ function BannerSlider(props) {
     '/images/banners/banner5.jpg'
   ]), []);
 
-  return (<>
-    <Paper className={props.className}>
+  return (
+    <Paper
+      className={className}
+      variant="outlined"
+    >
       <Swiper
-        id="main"
         tag="section"
         wrapperTag="ul"
         loop='true'
@@ -44,13 +46,20 @@ function BannerSlider(props) {
             style={{ listStyle: 'none' }}
           >
             <div
-              style={{ width: '100%', height: '100%', backgroundImage: `url(${src})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+              style={{
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${src})`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center'
+              }}
             >
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
     </Paper>
-  </>)
+  )
 }
 export default memo(BannerSlider);

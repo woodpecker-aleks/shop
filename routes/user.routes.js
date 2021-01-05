@@ -50,13 +50,17 @@ router.post('/user',
 router.get('/user',
   authMiddleware,
   async (req, res) => {
-    const userId = req.user.userId;
+    try {
+      const userId = req.user.userId;
 
-    const user = await User.findById(userId);
+      const user = await User.findById(userId);
 
-    if (!user) return res.status(404).json({ message: 'User is not found' });
+      if (!user) return res.status(404).json({ message: 'User is not found' });
 
-    res.json(user);
+      res.json(user);
+    } catch (err) {
+      console.log(err);
+    }
   }
 );
 
@@ -69,7 +73,7 @@ router.delete('/user',
 
     if (!user) return res.status(404).json({ message: 'User is not found' });
 
-    res.status(200);
+    res.sendStatus(200);
   }
 )
 

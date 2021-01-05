@@ -2,11 +2,11 @@ import { FormControl, FormHelperText, IconButton, Input, InputAdornment, InputLa
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useFormik } from "formik";
-import { useState } from "react";
-import { emailValidator, passwordValidator, phoneValidator, wordValidator } from "../../constants";
+import { memo, useState } from "react";
+import { emailValidator, passwordValidator, phoneValidator, wordValidator } from "../../../constants";
 import { useStyles } from './RegisterFormClasses';
 
-function RegisterForm(props) {
+function RegisterForm({ valid, onSubmit, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles(props)
   
@@ -53,12 +53,12 @@ function RegisterForm(props) {
         errors.phone = 'Invalid phone number';
       }
 
-      if (!errors.email && !errors.password && !errors.confirmPassword && !errors.firstName) props.valid(true);
+      if (!errors.email && !errors.password && !errors.confirmPassword && !errors.firstName) valid(true);
 
       return errors;
     },
     onSubmit(values, {setSubmitting}) {
-      props.onSubmit(values);
+      onSubmit(values);
       setSubmitting(false);
     }
   });
@@ -171,4 +171,4 @@ function RegisterForm(props) {
   );
 }
 
-export default RegisterForm;
+export default memo(RegisterForm);

@@ -1,87 +1,105 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { DELETE, ERROR, GET, IDLE, LOADING, POST, SUCCESS } from '../../constants';
+import { ERROR, IDLE, LOADING, SUCCESS } from '../../constants';
+import { Http } from '../../functions';
 
-export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async (token) => {
-  const res = await fetch('/api/user', {
-    method: DELETE,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
+export const addProductToCard = createAsyncThunk('appUser/addProductToCard', async () => {
+  
+});
 
-  return res;
-})
+export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async () => {
+  return await Http.delete('/api/user');
+});
 
-export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (token) => {
-  const res = await fetch('/api/user', {
-    method: GET,
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  });
-
-  const user = await res.json();
-
-  return user;
+export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async () => {
+  return await Http.get('/api/user');
 });
 
 export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData) => {
-  const res = await fetch('/api/user', {
-    method: POST,
-    headers: {
-      Authorization: `Bearer ${newUserData.token}`
-    },
-    body: newUserData.formData
-  });
-
-  const updatedUser = await res.json();
-
-  return updatedUser;
+  return await Http.post('/api/user', newUserData, { reqData: 'form' });
 });
 
-const initialState = {
-  status: IDLE
-}
+export const likeProduct = createAsyncThunk('appUser/likeProduct', async (productId) => {
+  Http.get(`/api/product/like/${productId}`, { resData: 'status' });
+
+  return productId;
+});
+
+export const disslikeProduct = createAsyncThunk('appUser/disslikeProduct', async (productId) => {
+  Http.delete(`/api/product/like/${productId}`, { resData: 'status' });
+
+  return productId;
+});
 
 const appUserSlice = createSlice({
   name: 'appUser',
-  initialState,
+  initialState: {
+    status: IDLE,
+    firstName: null,
+    lastName: null,
+    email: null,
+    phone: null,
+    avatar: null,
+    likedProducts: [],
+    card: []
+  },
   reducers: {},
   extraReducers: {
     [getFetchUser.pending]: (state, action) => {
       state.status = LOADING;
     },
     [getFetchUser.fulfilled]: (state, action) => {
-      const { avatar, phone, firstName, lastName, email } = action.payload;
-
-      state.avatar = avatar;
-      state.phone = phone;
-      state.firstName = firstName;
-      state.lastName = lastName;
-      state.email = email;
-      state.status = SUCCESS;
+      const {
+        avatar,
+        phone,
+        firstName,
+        lastName,
+        email,
+        likedProducts,
+        card
+      } = action.payload;
+      
+      return {
+        avatar,
+        phone,
+        firstName,
+        lastName,
+        email,
+        likedProducts,
+        card,
+        status: SUCCESS
+      }
     },
     [getFetchUser.rejected]: (state, action) => {
-      state.status = ERROR;
-      state.error = action.error.message;
+      return { status: ERROR, error: action.error.message }
     },
     
     [updateFetchUser.pending]: (state, action) => {
       state.status = LOADING;
     },
     [updateFetchUser.fulfilled]: (state, action) => {
-      const { avatar, phone, firstName, lastName, email } = action.payload;
+      const {
+        avatar,
+        phone,
+        firstName,
+        lastName,
+        email,
+        likedProducts,
+        card,
+      } = action.payload;
 
-      state.avatar = avatar;
-      state.phone = phone;
-      state.firstName = firstName;
-      state.lastName = lastName;
-      state.email = email;
-      state.status = SUCCESS;
+      return {
+        avatar,
+        phone,
+        firstName,
+        lastName,
+        email,
+        likedProducts,
+        card,
+        status: SUCCESS
+      }
     },
     [updateFetchUser.rejected]: (state, action) => {
-      state.status = ERROR;
-      state.error = action.error.message;
+      return { status: ERROR, error: action.error.message }
     },
 
     [deleteFetchUser.pending]: (state, action) => {
@@ -91,10 +109,22 @@ const appUserSlice = createSlice({
       state.status = SUCCESS;
     },
     [deleteFetchUser.rejected]: (state, action) => {
-      state.status = ERROR;
-      state.error = action.error.message;
+      return { status: ERROR, error: action.error.message }
     },
+
+    [likeProduct.fulfilled]: (state, action) => {
+      state.likedProducts.push(action.payload);
+    },
+
+    [disslikeProduct.fulfilled]: (state, action) => {
+      state.likedProducts = state.likedProducts.filter(product => product !== action.payload);
+    }
   }
 });
+
+export const likedProductSelector = (store, productId) => {
+  if (store.appUser.status === SUCCESS) return Boolean(store.appUser.likedProducts?.find(product => product === productId));
+  else return false;
+};
 
 export default appUserSlice.reducer;

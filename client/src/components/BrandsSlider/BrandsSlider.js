@@ -8,11 +8,14 @@ import { memo } from 'react';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Keyboard]);
 
-function BransSlider({ cards }) {
+function BransSlider({ cards, ...props }) {
   const classes = useStyles();
 
-  return (<>
-    <Paper className={classes.root}>
+  return (
+    <Paper
+      className={classes.root}
+      variant="outlined"
+    >
       <Swiper
         className={classes.slider}
         tag="section"
@@ -46,6 +49,6 @@ function BransSlider({ cards }) {
         ))}
       </Swiper>
     </Paper>
-  </>)
+  )
 }
 export default memo(BransSlider);

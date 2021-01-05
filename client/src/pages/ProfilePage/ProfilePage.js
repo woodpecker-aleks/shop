@@ -12,12 +12,8 @@ import useStyles from "./ProfilePageClasses";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 
 function ProfilePage() {
-  const { auth, user } = useSelector(store => ({
-    auth: store.appAuth,
-    user: store.appUser
-  }));
+  const user = useSelector(store => store.appUser);
   const dispatch = useDispatch();
-  const { token } = auth;
   const fileField = useRef(null);
   const form = useRef(null);
   const history = useHistory();
@@ -37,7 +33,7 @@ function ProfilePage() {
 
   const handleDeleteAccount = () => {
     history.push('/');
-    dispatch( deleteFetchUser(token) );
+    dispatch( deleteFetchUser() );
     dispatch( logout() );
   }
 
@@ -76,7 +72,7 @@ function ProfilePage() {
 
     if (clearAvatar) formData.append('clearAvatar', true);
 
-    dispatch( updateFetchUser({ token, formData }) );
+    dispatch( updateFetchUser(formData) );
 
     setIsReadOnly(true);
   }

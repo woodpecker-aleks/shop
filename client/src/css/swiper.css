@@ -1,5 +1,6 @@
 .swiper-wrapper {
   padding-left: 0;
+  margin: 0 !important;
 }
 
 .MuiPaper-root {
@@ -16,6 +17,7 @@
 
 .MuiPaper-root .swiper-container {
   height: 250px;
+  width: 100%;
 }
 
 .swiper-button-prev {

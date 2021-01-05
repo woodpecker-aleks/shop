@@ -3,10 +3,11 @@ import { makeStyles } from "@material-ui/core";
 export const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    justifyContent: 'stretch'
+    justifyContent: 'space-between',
+    alignItems: 'start'
   },
-  slider: {
-    width: '50%',
-    padding: theme.spacing(2)
-  }
+  productSlider: {
+    width: 'calc(50% - 20px)',
+    height: 380
+  },
 }));

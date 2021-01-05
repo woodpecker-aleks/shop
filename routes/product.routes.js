@@ -1,7 +1,9 @@
 const { Router } = require('express');
+const { Types } = require('mongoose');
 const Product = require('../models/Product');
+const User = require('../models/User');
 const router = Router();
-const colors = require('colors');
+const authMiddleware = require('../middleware/auth.middleware');
 
 router.post('/product/update', async (req, res) => {
   try {
@@ -53,7 +55,7 @@ router.get('/product/:url', async (req, res) => {
 
 router.post('/products', async (req, res) => {
   try {
-    const { filter, max, range, sort } = req.body;
+    const { filter, max, range, sort, ids } = req.body;
 
     const queryFilter = {...filter};
     if (filter.options) delete queryFilter.options;
@@ -61,6 +63,11 @@ router.post('/products', async (req, res) => {
     if (filter.sale) delete queryFilter.sale;
 
     let query = Product.find(queryFilter);
+
+    if (ids) {
+      const productIds = ids.map(id => Types.ObjectId(id));
+      query.where('_id').in(productIds);
+    }
 
     if (filter.categories) {
       query.where('categories').all(filter.categories);
@@ -146,5 +153,33 @@ router.post('/products', async (req, res) => {
     res.sendStatus(500);
   }
 });
+
+router.get('/product/like/:id',
+  authMiddleware,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const likedProductId = req.params.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { likedProducts: likedProductId } }, { new: true });
+
+    if (!updatedUser) return res.sendStatus(500);
+
+    res.sendStatus(200);
+  }
+)
+
+router.delete('/product/like/:id',
+  authMiddleware,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const likedProductId = req.params.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { likedProducts: likedProductId } }, { new: true });
+
+    if (!updatedUser) return res.sendStatus(500);
+
+    res.sendStatus(200);
+  }
+)
 
 module.exports = router;

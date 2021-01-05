@@ -71,5 +71,8 @@ export const useStyles = makeStyles(theme => ({
     borderRadius: '15px',
     backgroundColor: (theme.palette.type === 'light') ? theme.palette.primary.main : 'gray',
     color: '#fafafa'
+  },
+  activeLikeIcon: {
+    color: theme.palette.error.main
   }
 }));

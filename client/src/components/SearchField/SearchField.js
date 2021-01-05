@@ -1,12 +1,12 @@
-import { Box, Divider, IconButton, InputBase } from "@material-ui/core";
-import BackspaceOutlinedIcon from '@material-ui/icons/BackspaceOutlined';
-import Search from '@material-ui/icons/Search';
+import { Divider, IconButton, InputBase, Paper } from "@material-ui/core";
+import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
+import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 import clsx from 'clsx';
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import useGlobalStyles from '../../globalClasses';
 import { useStyles } from './SearchFieldClasses';
 
-function SearchField(props) {
+function SearchField({ className, ...props }) {
   const classes = useStyles(props);
   const glClasses = useGlobalStyles();
   const input = useRef(null);
@@ -23,16 +23,15 @@ function SearchField(props) {
   }
 
   return (
-    <Box
-      borderRadius={3}
-      component="form"
-      className={clsx(classes.root, props.className)}
+    <Paper
+      variant="outlined"
+      className={clsx(classes.root, className)}
     >
       <IconButton
         className={glClasses.iconButton}
         aria-label="search"
       >
-        <Search />
+        <SearchSharpIcon />
       </IconButton>
       <Divider
         className={classes.divider}
@@ -54,10 +53,10 @@ function SearchField(props) {
         aria-label="clean"
         onClick={cleanFieldValue}
       >
-        <BackspaceOutlinedIcon fontSize="small" />
+        <BackspaceSharpIcon fontSize="small" />
       </IconButton>
-    </Box>
+    </Paper>
   );
 }
 
-export default SearchField;
+export default memo(SearchField);

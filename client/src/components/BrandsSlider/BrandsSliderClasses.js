@@ -4,7 +4,8 @@ export const useStyles = makeStyles(theme => ({
   root: {
     marginBottom: theme.spacing(5),
     padding: theme.spacing(1),
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginInline: theme.spacing(1.5)
   },
   slider: {
     color: (theme.palette.type === 'light') ? theme.palette.primary.main : 'white',

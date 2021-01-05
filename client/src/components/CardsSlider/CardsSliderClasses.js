@@ -12,7 +12,7 @@ export const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   slider: {
-    paddingBottom: theme.spacing(4) + 'px !important',
+    paddingBottom: theme.spacing(5) + 'px !important',
     color: (theme.palette.type === 'light') ? theme.palette.primary.main : '#fafafa',
   }
 }));

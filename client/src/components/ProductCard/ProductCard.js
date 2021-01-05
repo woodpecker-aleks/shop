@@ -1,33 +1,55 @@
-import { Badge, Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Divider, Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { useStyles } from './ProductCardClasses';
-import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Card, CardActionArea, CardContent, CardMedia, Divider } from '@material-ui/core';
 import { Rating, Skeleton } from '@material-ui/lab';
-import ProductCardTimer from './ProductCardTimer';
-import { SUCCESS } from '../../constants';
 import { memo, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { SUCCESS } from '../../constants';
+import { calcAverageNumOfArray } from '../../functions';
+import ProductCardActions from './ProductCardActions';
+import { useStyles } from './ProductCardClasses';
+import ProductCardInfo from './ProductCardInfo';
+import ProductCardPrice from './ProductCardPrice';
+import ProductCardTimer from './ProductCardTimer';
 
-function ProductCard(props) {
+function ProductCard({ product, status, className, ...props }) {
   const classes = useStyles(props);
-  const { card, status, className } = props;
-  const rating = useMemo(() => {
-    if (!card.rating?.length) return 0;
-    else return card.rating.reduce((accum, curr) => (accum + curr), 0);
-  }, [card.rating]);
   
+  const rating = useMemo(() => {
+    if (!product.rating || !product.rating.length) return 0;
+    else return calcAverageNumOfArray(product.rating);
+  }, [product.rating]);
+
+  const cardClasses = useMemo(() => ({
+    root: className
+  }), [className]);
+
+
+
+  let cardMedia;
+  if (status !== SUCCESS) cardMedia = (
+    <Skeleton
+      className={classes.imageSkelet}
+      width="100%"
+      height="180px"
+    />
+  )
+  else cardMedia = (
+    <CardMedia
+      className={classes.cardMedia}
+      image={`/images/products/${product.mainImage}`}
+      title={product.name}
+    />
+  )
+
   return (
     <Card
-      classes={{
-        root: className
-      }}
+      classes={cardClasses}
       className={classes.card}
+      variant="outlined"
     >
-      {(card.sale) && (
-        <ProductCardTimer sale={card.sale} />
+      {product.sale && (
+        <ProductCardTimer sale={product.sale} />
       )}
-      {(status === SUCCESS) && (
+      {status === SUCCESS && (
         <Rating
           className={classes.cardRating}
           name="rating"
@@ -38,118 +60,16 @@ function ProductCard(props) {
       )}
       <CardActionArea
         component={Link}
-        to={`/product/${card.url}`}
+        to={`/product/${product.url}`}
       >
-        {(status !== SUCCESS) ? (
-          <Skeleton
-            className={classes.imageSkelet}
-            width="100%"
-            height="180px"
-          />
-        ) : (
-          <CardMedia
-            className={classes.cardMedia}
-            image={`/images/products/${card.mainImage}`}
-            title={card.name}
-          />
-        )}
+        {cardMedia}
         <CardContent className={classes.cardBody}>
-          {(status !== SUCCESS) ? (<>
-            <Skeleton width="100%">
-              <Typography
-                gutterBottom
-                variant="h5"
-                component="h4"
-                className={classes.cardTitle}
-              >
-                ...
-              </Typography>
-            </Skeleton>
-            <Skeleton width="100%">
-              <Typography
-                variant="body1"
-                color="textSecondary"
-                component="ul"
-                className={classes.descriptionList}
-              >
-                <li>...</li>
-                <li>...</li>
-                <li>...</li>
-              </Typography>
-            </Skeleton>
-          </>) : (<>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h4"
-              className={classes.cardTitle}
-            >
-              {card.name}
-            </Typography>
-            <Typography
-              variant="body1"
-              color="textSecondary"
-              component="ul"
-              className={classes.descriptionList}
-            >
-              <li className={card.count ? classes.positive : classes.negative}>{ card.count ? 'Are available' : 'Not available' }</li>
-              <li>Free shipping</li>
-              <li>{card.options && card.options.find(opt => opt.name === 'Brand').value}</li>
-            </Typography>
-          </>)}
-          <div className={classes.cardPrice}>
-            {(card.sale) ? (<>
-              <Badge
-                badgeContent="%"
-                color="primary"
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  component="span"
-                  className={classes.cardNewPrice}
-                >
-                  {card.sale.price}$
-                </Typography>
-              </Badge>
-              <Typography
-                variant="h6"
-                component="strike"
-                className={classes.cardOldPrice}
-              >
-                {card.price}$
-              </Typography>
-            </>) : (
-              <Typography
-                variant="h6"
-                component="span"
-                className={classes.cardNewPrice}
-              >
-                {card.price}$
-              </Typography>
-            )}
-          </div>
-          </CardContent>
+          <ProductCardInfo product={product} status={status} />
+          <ProductCardPrice product={product} status={status} />
+        </CardContent>
         <Divider />
       </CardActionArea>
-      <CardActions className={classes.cardFooter}>
-        <Button startIcon={<ShoppingCartOutlinedIcon />}>
-          Buy
-        </Button>
-        <Button startIcon={<FavoriteBorderOutlinedIcon />}>
-          Like
-        </Button>
-        <Button
-          component={Link}
-          to={`/product/${card.url}`}
-          startIcon={<ExpandMoreIcon />}
-        >
-          More
-        </Button>
-      </CardActions>
+      <ProductCardActions product={product} status={status} />
     </Card>
   );
 }

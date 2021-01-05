@@ -2,11 +2,11 @@ import { Checkbox, FormControl, FormControlLabel, FormHelperText, IconButton, In
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useFormik } from "formik";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useStyles } from './LoginFormClasses';
-import { emailValidator, passwordValidator } from '../../constants';
+import { emailValidator, passwordValidator } from '../../../constants';
 
-function LoginForm(props) {
+function LoginForm({ valid, onSubmit, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles(props);
   
@@ -31,12 +31,12 @@ function LoginForm(props) {
         errors.password = 'Invalid password';
       }
 
-      if (!errors.password && !errors.email) props.valid(true);
+      if (!errors.password && !errors.email) valid(true);
 
       return errors;
     },
     onSubmit(values, {setSubmitting}) {
-      props.onSubmit(values);
+      onSubmit(values);
       setSubmitting(false);
     }
   });
@@ -100,4 +100,4 @@ function LoginForm(props) {
   );
 }
 
-export default LoginForm;
+export default memo(LoginForm);

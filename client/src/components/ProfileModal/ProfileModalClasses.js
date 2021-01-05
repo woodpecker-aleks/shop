@@ -7,5 +7,9 @@ export const useStyles = makeStyles(theme => ({
   },
   button: {
     margin: theme.spacing(1)
+  },
+  avatarButton: {
+    padding: 0,
+    marginInline: theme.spacing(1)
   }
 }));

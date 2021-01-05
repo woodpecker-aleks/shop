@@ -4,6 +4,7 @@ import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import { darkTheme, lightTheme } from '../../muiThemes';
 import { getFetchUser } from '../../redux/reducers/appUserReducer';
+import AppAlert from '../AppAlert/AppAlert';
 import AppMenu from '../AppMenu/AppMenu';
 import Breadcrumb from '../Breadcrumb/Breadcrumb';
 import Footer from '../Footer/Footer';
@@ -17,21 +18,18 @@ function App() {
     auth: store.appAuth
   }));
   const dispatch = useDispatch();
-  const { isAuth, token } = auth;
+  const { isAuth } = auth;
   const [appTheme, setTheme] = useState(createMuiTheme( lightTheme ));
   const classes = useStyles({ theme: theme.type });
   const scrollbarStyles = useMemo(() => ({ width: '100vw', height: '100vh' }), []);
 
   useEffect(() => {
-    if (isAuth) dispatch( getFetchUser(token) );
-  }, [isAuth, token, dispatch]);
+    if (isAuth) dispatch( getFetchUser() );
+  }, [isAuth, dispatch]);
 
   useEffect(() => {
-    if (theme.type === 'light') {
-      setTheme( createMuiTheme(lightTheme) );
-    } else {
-      setTheme( createMuiTheme(darkTheme) );
-    }
+    if (theme.type === 'light') setTheme( createMuiTheme(lightTheme) );
+    else setTheme( createMuiTheme(darkTheme) );
   }, [theme.type]);
 
   return (
@@ -49,6 +47,7 @@ function App() {
           </Container>
           <Footer />
         </div>
+        <AppAlert />
       </ThemeProvider>
     </Scrollbars>
   );
