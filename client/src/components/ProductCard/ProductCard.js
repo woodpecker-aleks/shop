@@ -2,7 +2,6 @@ import { Card, CardActionArea, CardContent, CardMedia, Divider } from '@material
 import { Rating, Skeleton } from '@material-ui/lab';
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { SUCCESS } from '../../constants';
 import { calcAverageNumOfArray } from '../../functions';
 import ProductCardActions from './ProductCardActions';
 import { useStyles } from './ProductCardClasses';
@@ -25,7 +24,7 @@ function ProductCard({ product, status, className, ...props }) {
 
 
   let cardMedia;
-  if (status !== SUCCESS) cardMedia = (
+  if (!status.isSuccess) cardMedia = (
     <Skeleton
       className={classes.imageSkelet}
       width="100%"
@@ -49,7 +48,7 @@ function ProductCard({ product, status, className, ...props }) {
       {product.sale && (
         <ProductCardTimer sale={product.sale} />
       )}
-      {status === SUCCESS && (
+      {status.isSuccess && (
         <Rating
           className={classes.cardRating}
           name="rating"

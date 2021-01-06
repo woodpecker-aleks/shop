@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { emailValidator, LOADING, phoneValidator, wordValidator } from "../../constants";
+import { emailValidator, phoneValidator, wordValidator } from "../../constants";
 import { logout } from '../../redux/reducers/appAuthReducer';
 import { deleteFetchUser, updateFetchUser } from '../../redux/reducers/appUserReducer';
 import useStyles from "./ProfilePageClasses";
@@ -94,7 +94,7 @@ function ProfilePage() {
         className={classes.body}
       >
         <div className={classes.avatarWrapper}>
-          {user.status === LOADING ? (
+          {user.status.isLoading ? (
             <Skeleton variant="circle">
               <Avatar className={classes.avatar}>U</Avatar>
             </Skeleton>
@@ -107,7 +107,7 @@ function ProfilePage() {
               {user.firstName && user.firstName[0]}
             </Avatar>
           )}
-          {(!isReadOnly) && (<>
+          {!isReadOnly && (<>
             <IconButton className={classes.editBtn}>
               <label
                 htmlFor="avatar-image"
@@ -125,7 +125,7 @@ function ProfilePage() {
           </>)}
         </div>
         <div className={classes.fieldGroup}>
-          {(user.status === LOADING) ? (<>
+          {user.status.isLoading ? (<>
             <Skeleton width="100%">
               <TextField className={classes.input} />
             </Skeleton>

@@ -3,6 +3,7 @@ import { memo, useMemo } from "react";
 import { useSelector } from 'react-redux';
 import { transferCurrency } from '../../functions';
 import { useStyles } from "./ProductCardClasses";
+import { Skeleton } from '@material-ui/lab';
 
 function ProductCardPrice({ product, status, ...props }) {
   const classes = useStyles();
@@ -18,41 +19,54 @@ function ProductCardPrice({ product, status, ...props }) {
     else return 0;
   }, [product.sale?.price, currency]);
 
+  let productPrice;
+
+  if (status.isLoading) productPrice = (
+    <Skeleton
+      variant="text"
+      className={classes.cardPrice}
+      width="50%"
+      height="26px"
+    />
+  )
+  else if (product.sale) productPrice = (<>
+    <Badge
+      badgeContent="%"
+      color="primary"
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+    >
+      <Typography
+        variant="h6"
+        component="span"
+        className={classes.cardNewPrice}
+      >
+        {salePrice}
+      </Typography>
+    </Badge>
+    <Typography
+      variant="h6"
+      component="strike"
+      className={classes.cardOldPrice}
+    >
+      {price}
+    </Typography>
+  </>)
+  else productPrice = (
+    <Typography
+      variant="h6"
+      component="span"
+      className={classes.cardNewPrice}
+    >
+      {price}
+    </Typography>
+  )
+
   return (
     <div className={classes.cardPrice}>
-      {product.sale ? (<>
-        <Badge
-          badgeContent="%"
-          color="primary"
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-        >
-          <Typography
-            variant="h6"
-            component="span"
-            className={classes.cardNewPrice}
-          >
-            {salePrice}
-          </Typography>
-        </Badge>
-        <Typography
-          variant="h6"
-          component="strike"
-          className={classes.cardOldPrice}
-        >
-          {price}
-        </Typography>
-      </>) : (
-        <Typography
-          variant="h6"
-          component="span"
-          className={classes.cardNewPrice}
-        >
-          {price}
-        </Typography>
-      )}
+      {productPrice}
     </div>
   )
 }

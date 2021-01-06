@@ -5,7 +5,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import Scrollbars from "react-custom-scrollbars";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { POST, SUCCESS } from "../../constants";
+import { POST } from "../../constants";
 import useGlobalStyles from '../../globalClasses';
 import { useHttp } from '../../hooks/http.hook';
 import { disslikeProduct } from "../../redux/reducers/appUserReducer";
@@ -43,7 +43,7 @@ function LikedProductsModal() {
   const handleCloseModal = useCallback(() => setModalEnchor(null), [setModalEnchor]);
 
   let likedProducts = null;
-  if (status !== SUCCESS) likedProducts = (
+  if (!status.isSuccess) likedProducts = (
     <CircularProgress color="secondary" className={classes.progress} />
   )
   else if (!products.length) likedProducts = (

@@ -22,11 +22,12 @@ export const useStyles = makeStyles(theme => ({
     margin: 4,
   },
 
-  loader: {
+  progress: {
     position: 'absolute',
     bottom: 0,
     left: 0,
-    right: 0
+    right: 0,
+    backgroundColor: 'transparent'
   },
   progressBar: {
     backgroundColor: theme.palette.type === 'light' ? theme.palette.primary.main : '#fafafa'

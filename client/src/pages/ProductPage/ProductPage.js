@@ -5,7 +5,6 @@ import { useHttp } from "../../hooks/http.hook";
 import { useStyles } from "./ProductPageClasses";
 import ThumbsSlider from '../../components/ThumbsSlider/ThumbsSlider';
 import ProductInfo from "./productPageComponents/ProductInfo/ProductInfo";
-import { SUCCESS } from "../../constants";
 import { Skeleton } from "@material-ui/lab";
 
 function ProductPage() {
@@ -41,7 +40,7 @@ function ProductPage() {
   }, [product.images, product.mainImage]);
 
   let productSlider = null;
-  if (status !== SUCCESS) productSlider = (
+  if (!status.isSuccess) productSlider = (
     <Skeleton
       className={classes.productSlider}
       animation="wave"

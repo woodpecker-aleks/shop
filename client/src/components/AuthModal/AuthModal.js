@@ -1,50 +1,59 @@
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider } from '@material-ui/core';
-import { memo, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, LinearProgress } from '@material-ui/core';
+import { memo, useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHttp } from '../../hooks/http.hook';
 import { login } from '../../redux/reducers/appAuthReducer';
 import LoginForm from './LoginForm/LoginForm';
 import RegisterForm from './RegisterForm/RegisterForm';
 import { useStyles } from './AuthModalClasses';
+import { callAlert } from '../../redux/reducers/appAlertReducer';
 
 function AuthModal({ onClose, open, ...props }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [tab, setTab] = useState('sing in');
-  const { request, loading, error, clearError } = useHttp();
+  const { request, status } = useHttp();
   const [loginIsValid, setLoginIsValid] = useState(false);
   const [registerIsValid, setRegisterIsValid] = useState(false);
 
-  const loginHandler = async (values) => {
+  const loginHandler = useCallback(async (values) => {
     try {
       const { email, password } = values;
 
-      const { token, userId } = await request('/api/auth/login', 'POST', { email, password });
+      const { token, userId, error } = await request('/api/auth/login', 'POST', { email, password });
+
+      if (error) return dispatch( callAlert({ children: 'Failed login!', type: 'error' }) );
 
       dispatch( login({ token, userId }) );
-    } catch (err) {}
-  }
 
-  const registerHandler = async (values) => {
+      dispatch( callAlert({ children: 'Congratulations, you logined!', type: 'success' }) );
+
+    } catch (err) {}
+  }, [dispatch, request]);
+
+  const registerHandler = useCallback(async (values) => {
     try {
       const {email, password, phone, firstName, lastName} = values;
 
-      await request('/api/auth/register', 'POST', { email, password, firstName, lastName, phone });
-    } catch (error) {}
-  }
+      const { error } = await request('/api/auth/register', 'POST', { email, password, firstName, lastName, phone });
 
-  const closeHandler = () => {
+      if (error) return dispatch( callAlert({ children: 'Failed register!', type: 'error' }) );
+
+      dispatch( callAlert({ children: 'Congratulations, you registrated!', type: 'success' }) );
+    } catch (err) {}
+  }, [dispatch, request]);
+
+  const closeHandler = useCallback(() => {
     setTab('sing in');
     onClose();
-    clearError();
+  }, [onClose]);
+
+  let errorText;
+  if (status.isError) {
+    errorText = <DialogContentText className={classes.loginError}>{status.message}</DialogContentText>;
   }
 
-  let errorText = null;
-  if (error) {
-    errorText = <DialogContentText className={classes.loginError}>{error.message}</DialogContentText>;
-  }
-
-  let form = null;
+  let form;
   if (tab === 'sing in') {
     form = (
       <LoginForm
@@ -61,18 +70,16 @@ function AuthModal({ onClose, open, ...props }) {
     )
   }
 
-  let actions = null;
+  let actions;
   if (tab === 'sing in') {
     actions = (<>
       <Button
         type="submit"
         form="login"
         variant="outlined"
-        className={classes.submitBtn}
         color="inherit"
-        disabled={loading || !loginIsValid}
+        disabled={status.isLoading || !loginIsValid}
       >
-        {loading && <CircularProgress className={classes.progress} size={24} />}
         Sing In
       </Button>
       <Button
@@ -85,7 +92,7 @@ function AuthModal({ onClose, open, ...props }) {
     actions = (<>
       <Button
         onClick={() => setTab('sing in')}
-        disabled={loading}
+        disabled={status.isLoading}
       >
         Sing In
       </Button>
@@ -93,11 +100,9 @@ function AuthModal({ onClose, open, ...props }) {
         type="submit"
         form="register"
         variant="outlined"
-        className={classes.submitBtn}
         color="inherit"
-        disabled={loading || !registerIsValid}
+        disabled={status.isLoading || !registerIsValid}
       >
-        {loading && <CircularProgress className={classes.progress} size={24} />}
         Sing Up
       </Button>
     </>)
@@ -115,7 +120,12 @@ function AuthModal({ onClose, open, ...props }) {
         {(tab === 'sing in') ? 'SING IN' : 'SING UP'}
       </DialogTitle>
       <Divider />
-      <DialogContent>
+      <DialogContent className={classes.dialogContent}>
+        {status.isLoading && (
+          <LinearProgress
+            className={classes.progress}
+            classes={{ bar: classes.progressBar }} 
+          />)}
         {errorText}
         {form}
       </DialogContent>

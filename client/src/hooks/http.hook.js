@@ -1,13 +1,11 @@
 import { useState, useCallback } from 'react';
-import { ERROR, GET, IDLE, LOADING, SUCCESS } from '../constants';
+import { GET } from '../constants';
 
 export const useHttp = () => {
-  const [status, setStatus] = useState(IDLE);
-  const [error, setError] = useState(null);
+  const [status, setStatus] = useState({ isIdle: true });
 
-  const clearError = useCallback(() => setError(null), []);
   const request = useCallback( async (url, method = GET, body = null, headers = {}) => {
-    setStatus(LOADING);
+    setStatus({ isLoading: true });
     
     try {
       if (body) {
@@ -20,14 +18,17 @@ export const useHttp = () => {
 
       if (!res.ok) throw new Error(data.message || 'Bad request');
 
-      setStatus(SUCCESS);
+      setStatus({ isSuccess: true });
 
       return data;
     } catch (err) {
-      setStatus(ERROR);
-      setError(err);
+      setStatus({ isError: true, message: err.message });
+      return {
+        error: true,
+        errorMessage: err.message
+      }
     }
   }, []);
 
-  return { status, request, error, clearError, setError };
+  return { status, request };
 }

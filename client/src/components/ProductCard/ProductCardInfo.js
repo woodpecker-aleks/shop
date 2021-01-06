@@ -1,13 +1,12 @@
 import { Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { memo } from "react";
-import { SUCCESS } from "../../constants";
 import { useStyles } from "./ProductCardClasses";
 
 function ProductCardInfo({ product, status, ...props }) {
   const classes = useStyles();
 
-  if (status !== SUCCESS) return (<>
+  if (!status.isSuccess) return (<>
     <Skeleton width="100%">
       <Typography
         gutterBottom

@@ -7,7 +7,6 @@ import TabsPanel from "../../../../components/TabsPanel/TabsPanel";
 import { Button, Divider } from "@material-ui/core";
 import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Badge } from "@material-ui/core";
 import { calcAverageNumOfArray, transferCurrency } from '../../../../functions';
-import { SUCCESS } from "../../../../constants";
 import { useDispatch, useSelector } from "react-redux";
 import ProductCardTimer from '../../../../components/ProductCard/ProductCardTimer';
 import { disslikeProduct, likedProductSelector, likeProduct } from "../../../../redux/reducers/appUserReducer";
@@ -55,7 +54,7 @@ function ProductInfo({ product, status, ...props }) {
   }, [product.sale?.price, currency]);
 
   let productDescription = null;
-  if (status !== SUCCESS) productDescription = (
+  if (!status.isSuccess) productDescription = (
     <Skeleton
       className={classes.productDescription}
       height={200}
@@ -73,7 +72,7 @@ function ProductInfo({ product, status, ...props }) {
   )
 
   let productOptions = null;
-  if (status !== SUCCESS) productOptions = (
+  if (!status.isSuccess) productOptions = (
     <Skeleton
       height={200}
       width="100%"
@@ -106,7 +105,7 @@ function ProductInfo({ product, status, ...props }) {
   ]), [productDescription, productOptions]);
 
   let productHeader = null;
-  if (status !== SUCCESS) productHeader = (
+  if (!status.isSuccess) productHeader = (
     <Skeleton
       className={classes.productHeader}
       height={46}
@@ -130,7 +129,7 @@ function ProductInfo({ product, status, ...props }) {
   )
 
   let availableSign = null;
-  if (status !== SUCCESS) availableSign = (
+  if (!status.isSuccess) availableSign = (
     <Skeleton
       className={classes.success}
       animation="wave"
@@ -188,7 +187,7 @@ function ProductInfo({ product, status, ...props }) {
   )
 
   let productActionBar = null;
-  if (status !== SUCCESS) productActionBar = (
+  if (!status.isSuccess) productActionBar = (
     <Skeleton
       className={classes.productActionBar}
       height={46}
@@ -206,7 +205,7 @@ function ProductInfo({ product, status, ...props }) {
       >
         Buy
       </Button>
-      {(isLiked) ? (
+      {isLiked ? (
         <Button
           startIcon={<FavoriteIcon className={classes.activeLikeIcon} />}
           onClick={dispatchDisslikeProduct}

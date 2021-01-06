@@ -13,7 +13,7 @@ function AppAlert() {
     horizontal: 'center'
   }), []);
 
-  useEffect(() => setTimeout(dispatchClearAlert, duration), [duration, dispatchClearAlert]);
+  useEffect(() => setTimeout(dispatchClearAlert, duration), [duration, children, dispatchClearAlert]);
 
   return (
     <Snackbar

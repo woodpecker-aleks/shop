@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ERROR, IDLE, LOADING, SUCCESS } from '../../constants';
 import { Http } from '../../functions';
 
 export const addProductToCard = createAsyncThunk('appUser/addProductToCard', async () => {
@@ -33,7 +32,7 @@ export const disslikeProduct = createAsyncThunk('appUser/disslikeProduct', async
 const appUserSlice = createSlice({
   name: 'appUser',
   initialState: {
-    status: IDLE,
+    status: { isIdle: true },
     firstName: null,
     lastName: null,
     email: null,
@@ -45,7 +44,7 @@ const appUserSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getFetchUser.pending]: (state, action) => {
-      state.status = LOADING;
+      state.status = { isLoading: true };
     },
     [getFetchUser.fulfilled]: (state, action) => {
       const {
@@ -66,15 +65,15 @@ const appUserSlice = createSlice({
         email,
         likedProducts,
         card,
-        status: SUCCESS
+        status: { isSuccess: true }
       }
     },
     [getFetchUser.rejected]: (state, action) => {
-      return { status: ERROR, error: action.error.message }
+      return { status: { isError: true, message: action.error.message }, error: action.error.message }
     },
     
     [updateFetchUser.pending]: (state, action) => {
-      state.status = LOADING;
+      state.status = { isLoading: true };
     },
     [updateFetchUser.fulfilled]: (state, action) => {
       const {
@@ -95,21 +94,21 @@ const appUserSlice = createSlice({
         email,
         likedProducts,
         card,
-        status: SUCCESS
+        status: { isSuccess: true }
       }
     },
     [updateFetchUser.rejected]: (state, action) => {
-      return { status: ERROR, error: action.error.message }
+      return { status: { isError: true, message: action.error.message }, error: action.error.message }
     },
 
     [deleteFetchUser.pending]: (state, action) => {
-      state.status = LOADING;
+      state.status = { isLoading: true };
     },
     [deleteFetchUser.fulfilled]: (state, action) => {
-      state.status = SUCCESS;
+      state.status = { isSuccess: true };
     },
     [deleteFetchUser.rejected]: (state, action) => {
-      return { status: ERROR, error: action.error.message }
+      return { status: { isError: true, message: action.error.message }, error: action.error.message }
     },
 
     [likeProduct.fulfilled]: (state, action) => {
@@ -123,7 +122,7 @@ const appUserSlice = createSlice({
 });
 
 export const likedProductSelector = (store, productId) => {
-  if (store.appUser.status === SUCCESS) return Boolean(store.appUser.likedProducts?.find(product => product === productId));
+  if (store.appUser.status.isSuccess) return Boolean(store.appUser.likedProducts?.find(product => product === productId));
   else return false;
 };
 

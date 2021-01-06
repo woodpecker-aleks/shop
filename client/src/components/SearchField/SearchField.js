@@ -1,9 +1,9 @@
-import { Divider, IconButton, InputBase, LinearProgress, List, ListItem, Paper, ListItemText, Typography } from "@material-ui/core";
+import { Divider, IconButton, InputBase, LinearProgress, List, ListItem, Paper, ListItemText, Typography, Collapse } from "@material-ui/core";
 import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 import SearchSharpIcon from '@material-ui/icons/SearchSharp';
 import clsx from 'clsx';
 import { memo, useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { LOADING, POST } from "../../constants";
+import { POST } from "../../constants";
 import { debounce } from "../../functions";
 import useGlobalStyles from '../../globalClasses';
 import { useHttp } from "../../hooks/http.hook";
@@ -16,9 +16,10 @@ function SearchField({ className, ...props }) {
   const glClasses = useGlobalStyles();
   const rootRef = useRef(null);
   const [inputValue, setInputValue] = useState('');
-  const [inputHasValue, setInputHasValue] = useState(false);
   const { request, status } = useHttp();
   const [results, setResults] = useState(null);
+  const [resultsIsOpen, setResultsIsOpen] = useState(false);
+  const transitionTime = 500;
 
   const linearProgressClasses = useMemo(() => ({
     bar: classes.progressBar
@@ -35,21 +36,15 @@ function SearchField({ className, ...props }) {
 
   const debounceRequest = useMemo(() => debounce(requestForSearch, 500), [requestForSearch]);
 
-  const validateFieldValue = useCallback(() => {
-    if (inputValue) setInputHasValue(true);
-    else setInputHasValue(false);
-  }, [inputValue]);
-
   const cleanFieldValue = useCallback(() => {
+    setResultsIsOpen(false);
     setInputValue('');
-    setInputHasValue(false);
-    setResults(null);
-  }, []);
+    setTimeout(() => setResults(null), transitionTime);
+  }, [transitionTime]);
 
   const handleChange = useCallback(event => {
-    validateFieldValue();
     setInputValue(event.target.value);
-  }, [validateFieldValue]);
+  }, []);
 
   const handleOuterClick = useCallback(event => {
     if (!rootRef.current.contains(event.target)) cleanFieldValue();
@@ -65,11 +60,15 @@ function SearchField({ className, ...props }) {
     return () => window.removeEventListener('click', handleOuterClick);
   }, [inputValue, handleOuterClick]);
 
+  useEffect(() => {
+    if (results) setResultsIsOpen(true);
+  }, [results]);
+
   let resultsList;
   if (results && results.length) resultsList = (
     <Paper
-      className={classes.resultsList}
       onClick={cleanFieldValue}
+      elevation={3}
     >
       <Scrollbars style={scrollbarStyles}>
         <List
@@ -80,7 +79,7 @@ function SearchField({ className, ...props }) {
             const startMatchIndex = result.name.toLowerCase().indexOf(inputValue);
             const endMatchIndex = startMatchIndex + inputValue.length;
             const beforeMatch = result.name.slice(0, startMatchIndex);
-            const afterMatch = result.name.slice(endMatchIndex, result.name.length - 1);
+            const afterMatch = result.name.slice(endMatchIndex, result.name.length);
             const match = result.name.slice(startMatchIndex, endMatchIndex);
 
             return (
@@ -100,8 +99,8 @@ function SearchField({ className, ...props }) {
   )
   else if (results && !results.length) resultsList = (
     <Paper
-      className={classes.resultsList}
       onClick={cleanFieldValue}
+      elevation={3}
     >
       <Typography
         variant="button"
@@ -118,9 +117,9 @@ function SearchField({ className, ...props }) {
       className={clsx(classes.root, className)}
       ref={rootRef}
     >
-      {status === LOADING && (
+      {status.isLoading && (
         <LinearProgress
-          className={classes.loader}
+          className={classes.progress}
           classes={linearProgressClasses}
         />
       )}
@@ -145,14 +144,20 @@ function SearchField({ className, ...props }) {
         orientation="vertical"
       />
       <IconButton
-        disabled={!inputHasValue}
+        disabled={!inputValue}
         className={glClasses.iconButton}
         aria-label="clean"
         onClick={cleanFieldValue}
       >
         <BackspaceSharpIcon fontSize="small" />
       </IconButton>
-      {resultsList}
+      <Collapse
+        className={classes.resultsList}
+        in={resultsIsOpen}
+        timeout={transitionTime}
+      >
+        {resultsList}
+      </Collapse>
     </Paper>
   );
 }

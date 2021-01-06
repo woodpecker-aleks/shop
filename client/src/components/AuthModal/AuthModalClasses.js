@@ -9,15 +9,19 @@ export const useStyles = makeStyles(theme => ({
     color: theme.palette.error.main
   },
 
-  submitBtn: {
-    position: 'relative',
+  progress: {
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0
   },
 
-  progress: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
+  progressBar: {
+    backgroundColor: theme.palette.type === 'light' ? theme.palette.primary.main : '#fafafa'
+  },
+
+  dialogContent: {
+    position: 'relative'
   }
 }));
