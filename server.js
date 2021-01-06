@@ -15,6 +15,8 @@ app.use('/api', require('./routes/user.routes'));
 
 app.use('/api', require('./routes/product.routes'));
 
+app.use('/api', require('./routes/card.routes'));
+
 start();
 
 

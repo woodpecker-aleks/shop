@@ -5,16 +5,46 @@ const User = require('../models/User');
 const router = Router();
 const authMiddleware = require('../middleware/auth.middleware');
 
-router.post('/card', async (req, res) => {
-  try {
-    const product = req.body;
-    
+router.get('/card/:id',
+  authMiddleware,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const product = req.params.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { card: { product } } }, { new: true });
+
+    if (!updatedUser) return res.sendStatus(500);
+
     res.sendStatus(200);
-  } catch (err) {
-    const date = new Date();
-    console.log(`[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] Error from POST /api/product function:\n${err}`.red);
-    res.sendStatus(500);
   }
-});
+)
+
+router.delete('/card/:id',
+  authMiddleware,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const product = req.params.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { card: { product } } }, { new: true });
+
+    if (!updatedUser) return res.sendStatus(500);
+
+    res.sendStatus(200);
+  }
+)
+
+router.post('/card/:id',
+  authMiddleware,
+  async (req, res) => {
+    const userId = req.user.userId;
+    const product = req.params.id;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { card: { product } } }, { new: true });
+
+    if (!updatedUser) return res.sendStatus(500);
+
+    res.sendStatus(200);
+  }
+)
 
 module.exports = router;

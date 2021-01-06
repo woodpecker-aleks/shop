@@ -61,12 +61,17 @@ router.post('/products', async (req, res) => {
     if (filter.options) delete queryFilter.options;
     if (filter.categories) delete queryFilter.categories;
     if (filter.sale) delete queryFilter.sale;
+    if (filter.name) delete queryFilter.name;
 
     let query = Product.find(queryFilter);
 
     if (ids) {
       const productIds = ids.map(id => Types.ObjectId(id));
       query.where('_id').in(productIds);
+    }
+
+    if (filter.name) {
+      query.where('name').regex(new RegExp(`${filter.name}`, 'i'));
     }
 
     if (filter.categories) {

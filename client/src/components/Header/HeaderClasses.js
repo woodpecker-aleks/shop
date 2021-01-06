@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 export const useStyles = makeStyles(theme => ({
   root: {
     height: theme.spacing(8),
+    overflow: 'visible !important'
   },
 
   toolbar: {
