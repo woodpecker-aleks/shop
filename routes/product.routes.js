@@ -62,6 +62,7 @@ router.post('/products', async (req, res) => {
     if (filter.categories) delete queryFilter.categories;
     if (filter.sale) delete queryFilter.sale;
     if (filter.name) delete queryFilter.name;
+    if (filter.price) delete queryFilter.price;
 
     let query = Product.find(queryFilter);
 
@@ -70,8 +71,18 @@ router.post('/products', async (req, res) => {
       query.where('_id').in(productIds);
     }
 
+    if (req.body['!ids']) {
+      query.where('_id').nin(req.body['!ids']);
+    }
+
     if (filter.name) {
       query.where('name').regex(new RegExp(`${filter.name}`, 'i'));
+    }
+
+    if (filter.price?.from && filter.price?.to) {
+      query.where('price')
+        .gt(filter.price.from)
+        .lt(filter.price.to);
     }
 
     if (filter.categories) {
@@ -82,10 +93,6 @@ router.post('/products', async (req, res) => {
       query.where('options').elemMatch(el => {
         el.or(filter.options);
       });
-    }
-
-    if (filter.sale) {
-      query.exists('sale');
     }
 
     const products = await query;

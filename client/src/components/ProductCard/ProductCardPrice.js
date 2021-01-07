@@ -21,7 +21,7 @@ function ProductCardPrice({ product, status, ...props }) {
 
   let productPrice;
 
-  if (status.isLoading) productPrice = (
+  if (!status.isSuccess) productPrice = (
     <Skeleton
       variant="text"
       className={classes.cardPrice}

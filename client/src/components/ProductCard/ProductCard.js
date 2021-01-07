@@ -21,8 +21,6 @@ function ProductCard({ product, status, className, ...props }) {
     root: className
   }), [className]);
 
-
-
   let cardMedia;
   if (!status.isSuccess) cardMedia = (
     <Skeleton

@@ -1,20 +1,28 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Http } from '../../functions';
-
-export const addProductToCard = createAsyncThunk('appUser/addProductToCard', async () => {
-  
-});
+import { callAlert } from './appAlertReducer';
+import { logout } from './appAuthReducer';
 
 export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async () => {
   return await Http.delete('/api/user');
 });
 
-export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async () => {
-  return await Http.get('/api/user');
+export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (dispatch) => {
+  const res = await Http.get('/api/user', { resData: 'res' });
+
+  if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
+  if (res.status === 401) dispatch( logout() );
+
+  return await res.json();
 });
 
-export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData) => {
-  return await Http.post('/api/user', newUserData, { reqData: 'form' });
+export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData, dispatch) => {
+  const res = await Http.post('/api/user', newUserData, { reqData: 'form', resData: 'res' });
+
+  if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
+  if (res.status === 401) dispatch( logout() );
+
+  return await res.json();
 });
 
 export const likeProduct = createAsyncThunk('appUser/likeProduct', async (productId) => {

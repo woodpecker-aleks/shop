@@ -24,7 +24,7 @@ function App() {
   const scrollbarStyles = useMemo(() => ({ width: '100vw', height: '100vh' }), []);
 
   useEffect(() => {
-    if (isAuth) dispatch( getFetchUser() );
+    if (isAuth) dispatch( getFetchUser(dispatch) );
   }, [isAuth, dispatch]);
 
   useEffect(() => {

@@ -14,5 +14,8 @@ export const useStyles = makeStyles(theme => ({
   slider: {
     paddingBottom: theme.spacing(5) + 'px !important',
     color: (theme.palette.type === 'light') ? theme.palette.primary.main : '#fafafa',
+  },
+  noCardsTitle: {
+    color: theme.palette.type === 'light' ? 'black' : '#fafafa'
   }
 }));

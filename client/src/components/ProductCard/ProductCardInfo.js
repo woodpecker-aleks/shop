@@ -1,9 +1,10 @@
 import { Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { memo } from "react";
+import Carousel from '../Carousel/Carousel';
 import { useStyles } from "./ProductCardClasses";
 
-function ProductCardInfo({ product, status, ...props }) {
+function ProductCardInfo({ product, hover, status, ...props }) {
   const classes = useStyles();
 
   if (!status.isSuccess) return (<>
@@ -31,14 +32,16 @@ function ProductCardInfo({ product, status, ...props }) {
     </Skeleton>
   </>)
   else return (<>
-    <Typography
-      gutterBottom
-      variant="h5"
-      component="h4"
-      className={classes.cardTitle}
-    >
-      {product.name}
-    </Typography>
+    <Carousel active={hover}>
+      <Typography
+        gutterBottom
+        variant="h5"
+        component="h4"
+        className={classes.cardTitle}
+      >
+        {product.name}
+      </Typography>
+    </Carousel>
     <Typography
       variant="body1"
       color="textSecondary"

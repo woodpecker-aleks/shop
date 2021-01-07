@@ -16,10 +16,11 @@ export const useStyles = makeStyles(theme => ({
   },
   cardTitle: {
     marginBottom: theme.spacing(1),
-    width: '100%',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    fontSize: 18
+    fontSize: 18,
+    display: 'inline',
+    marginRight: theme.spacing(3)
   },
   cardBody: {
     padding: '15px 25px',

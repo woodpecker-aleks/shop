@@ -55,10 +55,10 @@ function SearchField({ className, ...props }) {
   }, [debounceRequest, inputValue]);
 
   useEffect(() => {
-    if (inputValue) window.addEventListener('click', handleOuterClick);
+    if (resultsIsOpen) window.addEventListener('click', handleOuterClick);
 
     return () => window.removeEventListener('click', handleOuterClick);
-  }, [inputValue, handleOuterClick]);
+  }, [resultsIsOpen, handleOuterClick]);
 
   useEffect(() => {
     if (results) setResultsIsOpen(true);
