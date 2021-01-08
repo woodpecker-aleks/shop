@@ -8,6 +8,7 @@ const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
 const ProfilePage = lazy(() => import('../../pages/ProfilePage/ProfilePage'));
 const NotFoundPage = lazy(() => import('../../pages/NotFoundPage/NotFoundPage'));
 const ProductPage = lazy(() => import('../../pages/ProductPage/ProductPage'));
+const RedirectToHome = () => <Redirect to="/" />
 
 function RouterController() {
   const isAuth = useSelector(store => store.appAuth.isAuth);
@@ -18,6 +19,11 @@ function RouterController() {
       exact: true,
       path: '/',
       component: HomePage
+    },
+    {
+      exact: true,
+      path: '/product',
+      component: RedirectToHome
     },
     {
       path: '/profile',

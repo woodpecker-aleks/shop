@@ -5,10 +5,9 @@ import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import { memo, useCallback } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { disslikeProduct, likedProductSelector, likeProduct } from '../../redux/reducers/appUserReducer';
+import { disslikeProduct, likedProductSelector, likeProduct } from '../../redux/reducers/appLikedProductsCardReducer';
 import { useStyles } from "./ProductCardClasses";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { incrementCounter } from '../../redux/reducers/counterReducer';
 
 function ProductCardActions({ product, status, ...props }) {
   const classes = useStyles();
@@ -16,12 +15,11 @@ function ProductCardActions({ product, status, ...props }) {
   const dispatch = useDispatch();
   
   const dispatchLikeProduct = useCallback(() => {
-    dispatch( likeProduct(product._id) );
-    dispatch( incrementCounter('likedProducts') );
+    dispatch( likeProduct(product._id, dispatch) );
   }, [product._id, dispatch]);
   
   const dispatchDisslikeProduct = useCallback(() => {
-    dispatch( disslikeProduct(product._id) );
+    dispatch( disslikeProduct(product._id, dispatch) );
   }, [product._id, dispatch]);
 
   return (

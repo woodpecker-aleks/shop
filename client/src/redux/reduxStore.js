@@ -4,8 +4,8 @@ import appThemeReducer from './reducers/appThemeReducer';
 import appAuthReducer from './reducers/appAuthReducer';
 import appUserReducer from './reducers/appUserReducer';
 import appCurrencyReducer from "./reducers/appCurrencyReducer";
-import counterReducer from './reducers/counterReducer';
 import appAlertReducer from './reducers/appAlertReducer';
+import appLikedProductsCardReducer from './reducers/appLikedProductsCardReducer';
 
 export default configureStore({
   reducer: {
@@ -14,7 +14,7 @@ export default configureStore({
     appAuth: appAuthReducer,
     appUser: appUserReducer,
     appCurrency: appCurrencyReducer,
-    counter: counterReducer,
-    alert: appAlertReducer
+    alert: appAlertReducer,
+    likedProductsCard: appLikedProductsCardReducer
   }
 });

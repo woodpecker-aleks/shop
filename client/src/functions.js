@@ -1,4 +1,4 @@
-import { DOLLAR, EU, UAH, RUB, ZL, GET, POST, DELETE, PUT } from './constants';
+import { EU, UAH, RUB, ZL, GET, POST, DELETE, PUT } from './constants';
 
 export function calcAverageNumOfArray(array) {
   const sumOfArrayNums = array.reduce((accum, curr) => (accum + curr), 0);
@@ -8,11 +8,11 @@ export function calcAverageNumOfArray(array) {
 
 export function transferCurrency(money, currency) {
   switch (currency) {
-    case DOLLAR: return `$ ${money}`;
     case ZL: return `${ (money * 3.74).toFixed(0) } zł`;
     case UAH: return `${ (money * 28.34).toFixed(0) } грн.`;
     case RUB: return `${ (money * 74.54).toFixed(0) } руб.`;
     case EU: return `€ ${ (money * 0.81).toFixed(0) }`;
+    default: return `$ ${money}`;
   }
 }
 

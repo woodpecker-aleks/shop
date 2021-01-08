@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Http } from '../../functions';
 import { callAlert } from './appAlertReducer';
 import { logout } from './appAuthReducer';
+import { setLikedProducts } from './appLikedProductsCardReducer';
 
 export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async () => {
   return await Http.delete('/api/user');
@@ -13,7 +14,11 @@ export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (disp
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
   if (res.status === 401) dispatch( logout() );
 
-  return await res.json();
+  const user = await res.json();
+
+  dispatch( setLikedProducts(user.likedProducts) );
+
+  return user;
 });
 
 export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData, dispatch) => {
@@ -25,18 +30,6 @@ export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async
   return await res.json();
 });
 
-export const likeProduct = createAsyncThunk('appUser/likeProduct', async (productId) => {
-  Http.get(`/api/product/like/${productId}`, { resData: 'status' });
-
-  return productId;
-});
-
-export const disslikeProduct = createAsyncThunk('appUser/disslikeProduct', async (productId) => {
-  Http.delete(`/api/product/like/${productId}`, { resData: 'status' });
-
-  return productId;
-});
-
 const appUserSlice = createSlice({
   name: 'appUser',
   initialState: {
@@ -46,7 +39,6 @@ const appUserSlice = createSlice({
     email: null,
     phone: null,
     avatar: null,
-    likedProducts: [],
     card: []
   },
   reducers: {},
@@ -61,7 +53,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        likedProducts,
         card
       } = action.payload;
       
@@ -71,7 +62,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        likedProducts,
         card,
         status: { isSuccess: true }
       }
@@ -90,7 +80,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        likedProducts,
         card,
       } = action.payload;
 
@@ -100,7 +89,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        likedProducts,
         card,
         status: { isSuccess: true }
       }
@@ -118,20 +106,7 @@ const appUserSlice = createSlice({
     [deleteFetchUser.rejected]: (state, action) => {
       return { status: { isError: true, message: action.error.message }, error: action.error.message }
     },
-
-    [likeProduct.fulfilled]: (state, action) => {
-      state.likedProducts.push(action.payload);
-    },
-
-    [disslikeProduct.fulfilled]: (state, action) => {
-      state.likedProducts = state.likedProducts.filter(product => product !== action.payload);
-    }
   }
 });
-
-export const likedProductSelector = (store, productId) => {
-  if (store.appUser.status.isSuccess) return Boolean(store.appUser.likedProducts?.find(product => product === productId));
-  else return false;
-};
 
 export default appUserSlice.reducer;

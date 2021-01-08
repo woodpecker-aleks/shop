@@ -9,22 +9,20 @@ import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Ba
 import { calcAverageNumOfArray, transferCurrency } from '../../../../functions';
 import { useDispatch, useSelector } from "react-redux";
 import ProductCardTimer from '../../../../components/ProductCard/ProductCardTimer';
-import { disslikeProduct, likedProductSelector, likeProduct } from "../../../../redux/reducers/appUserReducer";
+import { disslikeProduct, likedProductSelector, likeProduct } from "../../../../redux/reducers/appLikedProductsCardReducer";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import { incrementCounter } from "../../../../redux/reducers/counterReducer";
 
 function ProductInfo({ product, status, ...props }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   
   const dispatchLikeProduct = useCallback(() => {
-    dispatch( likeProduct(product._id) );
-    dispatch( incrementCounter('likedProducts') );
+    dispatch( likeProduct(product._id, dispatch) );
   }, [product._id, dispatch]);
   
   const dispatchDisslikeProduct = useCallback(() => {
-    dispatch( disslikeProduct(product._id) );
+    dispatch( disslikeProduct(product._id, dispatch) );
   }, [product._id, dispatch]);
   
   const { currency, isLiked } = useSelector(store => ({

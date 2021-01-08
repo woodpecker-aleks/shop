@@ -33,7 +33,7 @@ function ProductPage() {
       price: { from: (product.price / 100) * 50, to:  (product.price / 100) * 150},
       categories: product.categories,
     }
-  }), [product.price, product.sale, product.categories, product._id]);
+  }), [product.price, product.categories, product._id]);
 
   useEffect(() => {
     request(`/api/product/${url}`)

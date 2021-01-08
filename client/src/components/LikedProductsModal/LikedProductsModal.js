@@ -8,15 +8,14 @@ import { Link } from "react-router-dom";
 import { POST } from "../../constants";
 import useGlobalStyles from '../../globalClasses';
 import { useHttp } from '../../hooks/http.hook';
-import { disslikeProduct } from "../../redux/reducers/appUserReducer";
-import { clearCounter, counterSelector } from "../../redux/reducers/counterReducer";
+import { disslikeProduct, clearNotifications } from "../../redux/reducers/appLikedProductsCardReducer";
 import { useStyles } from "./LikedProductsModalClasses";
 import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
 
 function LikedProductsModal() {
-  const { likedProductsCounter, likedProductIds, isAuth } = useSelector(store => ({
-    likedProductsCounter: counterSelector(store, 'likedProducts'),
-    likedProductIds: store.appUser.likedProducts,
+  const { likedProductsNotifications, likedProductIds, isAuth } = useSelector(store => ({
+    likedProductsNotifications: store.likedProductsCard.notifications,
+    likedProductIds: store.likedProductsCard.likedProducts,
     isAuth: store.appAuth.isAuth,
   }));
   const dispatch = useDispatch();
@@ -26,6 +25,11 @@ function LikedProductsModal() {
   const { request, status } = useHttp();
   const [products, setProducts] = useState([]);
   const scrollbarsStyles = useMemo(() => ({ width: '20vw', height: '50vh' }), []);
+
+  const notifications = useMemo(() => {
+    if (likedProductsNotifications > 0) return likedProductsNotifications;
+    else return 0;
+  }, [likedProductsNotifications]); 
 
   useEffect(() => {
     if (isAuth && modalAnchor) request('/api/products', POST, {
@@ -37,7 +41,7 @@ function LikedProductsModal() {
   
   const handleOpenModal = useCallback(event => {
     setModalEnchor(event.currentTarget);
-    dispatch( clearCounter('likedProducts') );
+    dispatch( clearNotifications() );
   }, [setModalEnchor, dispatch]);
 
   const handleCloseModal = useCallback(() => setModalEnchor(null), [setModalEnchor]);
@@ -77,7 +81,7 @@ function LikedProductsModal() {
           <IconButton
             edge="end"
             aria-label="remove"
-            onClick={() => dispatch( disslikeProduct(product._id) )}
+            onClick={() => dispatch( disslikeProduct(product._id, dispatch) )}
             className={classes.deleteBtn}
           >
             <BackspaceSharpIcon fontSize="small" />
@@ -98,7 +102,7 @@ function LikedProductsModal() {
           onClick={handleOpenModal}
         >
           <Badge
-            badgeContent={likedProductsCounter}
+            badgeContent={notifications}
             color="secondary"
             classes={{
               badge: classes.changesDot
