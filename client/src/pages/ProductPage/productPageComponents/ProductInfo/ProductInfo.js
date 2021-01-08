@@ -25,9 +25,10 @@ function ProductInfo({ product, status, ...props }) {
     dispatch( disslikeProduct(product._id, dispatch) );
   }, [product._id, dispatch]);
   
-  const { currency, isLiked } = useSelector(store => ({
+  const { currency, isLiked, isAuth } = useSelector(store => ({
     currency: store.appCurrency,
-    isLiked: likedProductSelector(store, product._id)
+    isLiked: likedProductSelector(store, product._id),
+    isAuth: store.appAuth.isAuth
   }));
   
   const rating = useMemo(() => {
@@ -216,6 +217,7 @@ function ProductInfo({ product, status, ...props }) {
           startIcon={<FavoriteBorderOutlinedIcon />}
           onClick={dispatchLikeProduct}
           className={classes.productLikeBtn}
+          disabled={!isAuth}
         >
           Like
         </Button>

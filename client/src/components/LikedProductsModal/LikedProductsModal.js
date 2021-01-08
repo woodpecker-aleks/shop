@@ -91,6 +91,8 @@ function LikedProductsModal() {
     ))
   )
 
+  if (!isAuth) return null;
+
   return (<>
     <Tooltip
       title="Liked"

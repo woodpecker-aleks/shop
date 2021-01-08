@@ -6,6 +6,7 @@ import appUserReducer from './reducers/appUserReducer';
 import appCurrencyReducer from "./reducers/appCurrencyReducer";
 import appAlertReducer from './reducers/appAlertReducer';
 import appLikedProductsCardReducer from './reducers/appLikedProductsCardReducer';
+import appShopCardReducer from './reducers/appShopCardReducer';
 
 export default configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export default configureStore({
     appUser: appUserReducer,
     appCurrency: appCurrencyReducer,
     alert: appAlertReducer,
-    likedProductsCard: appLikedProductsCardReducer
+    likedProductsCard: appLikedProductsCardReducer,
+    appShopCard: appShopCardReducer,
   }
 });

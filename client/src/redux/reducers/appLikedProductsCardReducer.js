@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { callAlert } from './appAlertReducer';
 import { Http } from '../../functions';
 
-export const likeProduct = createAsyncThunk('appUser/likeProduct', async (productId, dispatch) => {
+export const likeProduct = createAsyncThunk('likedProductsCard/likeProduct', async (productId, dispatch) => {
   const res = await Http.get(`/api/product/like/${productId}`, { resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
@@ -10,7 +10,7 @@ export const likeProduct = createAsyncThunk('appUser/likeProduct', async (produc
   return productId;
 });
 
-export const disslikeProduct = createAsyncThunk('appUser/disslikeProduct', async (productId, dispatch) => {
+export const disslikeProduct = createAsyncThunk('likedProductsCard/disslikeProduct', async (productId, dispatch) => {
   const res = await Http.delete(`/api/product/like/${productId}`, { resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );

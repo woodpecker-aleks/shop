@@ -11,7 +11,10 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 
 function ProductCardActions({ product, status, ...props }) {
   const classes = useStyles();
-  const isLiked = useSelector(store => likedProductSelector(store, product._id) );
+  const { isLiked, isAuth } = useSelector(store => ({
+    isLiked: likedProductSelector(store, product._id),
+    isAuth: store.appAuth.isAuth
+  }));
   const dispatch = useDispatch();
   
   const dispatchLikeProduct = useCallback(() => {
@@ -33,6 +36,7 @@ function ProductCardActions({ product, status, ...props }) {
           : <FavoriteBorderOutlinedIcon />
         }
         onClick={isLiked ? dispatchDisslikeProduct : dispatchLikeProduct}
+        disabled={!isAuth}
       >
         Like
       </Button>

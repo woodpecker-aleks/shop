@@ -30,6 +30,7 @@ const appAuthSlice = createSlice({
       return { token, userId, isAuth: true }
     },
     logout(state, action) {
+      const dispatch = action.payload;
       localStorage.removeItem('userData');
 
       return { token: null, userId: null, isAuth: false }

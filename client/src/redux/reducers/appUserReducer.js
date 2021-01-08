@@ -3,6 +3,7 @@ import { Http } from '../../functions';
 import { callAlert } from './appAlertReducer';
 import { logout } from './appAuthReducer';
 import { setLikedProducts } from './appLikedProductsCardReducer';
+import { setShopCardProducts } from './appShopCardReducer';
 
 export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async () => {
   return await Http.delete('/api/user');
@@ -17,6 +18,7 @@ export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (disp
   const user = await res.json();
 
   dispatch( setLikedProducts(user.likedProducts) );
+  dispatch( setShopCardProducts(user.card) );
 
   return user;
 });
@@ -27,7 +29,12 @@ export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
   if (res.status === 401) dispatch( logout() );
 
-  return await res.json();
+  const user = await res.json();
+
+  dispatch( setLikedProducts(user.likedProducts) );
+  dispatch( setShopCardProducts(user.card) );
+
+  return user;
 });
 
 const appUserSlice = createSlice({
@@ -39,7 +46,6 @@ const appUserSlice = createSlice({
     email: null,
     phone: null,
     avatar: null,
-    card: []
   },
   reducers: {},
   extraReducers: {
@@ -53,7 +59,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        card
       } = action.payload;
       
       return {
@@ -62,7 +67,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        card,
         status: { isSuccess: true }
       }
     },
@@ -80,7 +84,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        card,
       } = action.payload;
 
       return {
@@ -89,7 +92,6 @@ const appUserSlice = createSlice({
         firstName,
         lastName,
         email,
-        card,
         status: { isSuccess: true }
       }
     },

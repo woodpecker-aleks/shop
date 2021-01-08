@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, memo } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import { darkTheme, lightTheme } from '../../muiThemes';
+import { clearNotifications, setLikedProducts } from '../../redux/reducers/appLikedProductsCardReducer';
 import { getFetchUser } from '../../redux/reducers/appUserReducer';
 import AppAlert from '../AppAlert/AppAlert';
 import AppMenu from '../AppMenu/AppMenu';
@@ -24,7 +25,12 @@ function App() {
   const scrollbarStyles = useMemo(() => ({ width: '100vw', height: '100vh' }), []);
 
   useEffect(() => {
-    if (isAuth) dispatch( getFetchUser(dispatch) );
+    if (isAuth) {
+      dispatch( getFetchUser(dispatch) );
+    } else {
+      dispatch( clearNotifications() );
+      dispatch( setLikedProducts([]) );
+    }
   }, [isAuth, dispatch]);
 
   useEffect(() => {

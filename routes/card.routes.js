@@ -1,50 +1,65 @@
 const { Router } = require('express');
 const { Types } = require('mongoose');
-const Product = require('../models/Product');
 const User = require('../models/User');
 const router = Router();
 const authMiddleware = require('../middleware/auth.middleware');
 
-router.get('/card/:id',
-  authMiddleware,
-  async (req, res) => {
-    const userId = req.user.userId;
-    const product = req.params.id;
-
-    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { card: { product } } }, { new: true });
-
-    if (!updatedUser) return res.sendStatus(500);
-
-    res.sendStatus(200);
-  }
-)
-
 router.delete('/card/:id',
   authMiddleware,
   async (req, res) => {
-    const userId = req.user.userId;
-    const product = req.params.id;
+    try {
+      const userId = req.user.userId;
+      const product = req.params.id;
 
-    const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { card: { product } } }, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { card: { product } } }, { new: true });
 
-    if (!updatedUser) return res.sendStatus(500);
+      if (!updatedUser) return res.sendStatus(500);
 
-    res.sendStatus(200);
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   }
 )
 
-router.post('/card/:id',
+router.get('/card/:id',
   authMiddleware,
   async (req, res) => {
-    const userId = req.user.userId;
-    const product = req.params.id;
+    try {
+      const userId = req.user.userId;
+      const product = req.params.id;
 
-    const updatedUser = await User.findByIdAndUpdate(userId, { $push: { card: { product } } }, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(userId, { $push: { card: { product } } }, { new: true });
 
-    if (!updatedUser) return res.sendStatus(500);
+      if (!updatedUser) return res.sendStatus(500);
 
-    res.sendStatus(200);
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
   }
 )
+
+router.get('/card/:productId/:count',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const { productId, count } = req.params;
+      const userId = req.user.userId;
+
+      const query = User.findByIdAndUpdate(userId, {}, { new: true });
+
+      query.where('card').elemMatch({ product: productId }).set({ count });
+
+      const updatedUser = await query;
+
+      if (!updatedUser) return res.sendStatus(500);
+
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  }
+);
 
 module.exports = router;
