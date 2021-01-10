@@ -4,7 +4,7 @@ import { memo } from "react";
 import Carousel from '../Carousel/Carousel';
 import { useStyles } from "./ProductCardClasses";
 
-function ProductCardInfo({ product, hover, status, ...props }) {
+function ProductCardInfo({ product, status, ...props }) {
   const classes = useStyles();
 
   if (!status.isSuccess) return (<>
@@ -32,7 +32,7 @@ function ProductCardInfo({ product, hover, status, ...props }) {
     </Skeleton>
   </>)
   else return (<>
-    <Carousel active={hover}>
+    <Carousel active={true}>
       <Typography
         gutterBottom
         variant="h5"

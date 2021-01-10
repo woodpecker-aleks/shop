@@ -72,7 +72,7 @@ function ProfilePage() {
 
     if (clearAvatar) formData.append('clearAvatar', true);
 
-    dispatch( updateFetchUser(formData, dispatch) );
+    dispatch( updateFetchUser(formData) );
 
     setIsReadOnly(true);
   }

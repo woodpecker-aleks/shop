@@ -26,7 +26,7 @@ function App() {
 
   useEffect(() => {
     if (isAuth) {
-      dispatch( getFetchUser(dispatch) );
+      dispatch( getFetchUser() );
     } else {
       dispatch( clearNotifications() );
       dispatch( setLikedProducts([]) );

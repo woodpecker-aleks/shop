@@ -75,6 +75,10 @@ router.post('/products', async (req, res) => {
       query.where('_id').nin(req.body['!ids']);
     }
 
+    if (filter.sale) {
+      query.exists('sale');
+    }
+
     if (filter.name) {
       query.where('name').regex(new RegExp(`${filter.name}`, 'i'));
     }

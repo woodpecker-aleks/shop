@@ -11,7 +11,7 @@ router.delete('/card/:id',
       const userId = req.user.userId;
       const product = req.params.id;
 
-      const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { card: { product } } }, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(userId, { $pull: { card: { _id: product } } }, { new: true });
 
       if (!updatedUser) return res.sendStatus(500);
 
@@ -29,7 +29,7 @@ router.get('/card/:id',
       const userId = req.user.userId;
       const product = req.params.id;
 
-      const updatedUser = await User.findByIdAndUpdate(userId, { $push: { card: { product } } }, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(userId, { $addToSet: { card: { _id: product } } }, { new: true });
 
       if (!updatedUser) return res.sendStatus(500);
 
@@ -49,7 +49,7 @@ router.get('/card/:productId/:count',
 
       const query = User.findByIdAndUpdate(userId, {}, { new: true });
 
-      query.where('card').elemMatch({ product: productId }).set({ count });
+      query.where('card').elemMatch({ _id: productId }).set('card.$.count', count);
 
       const updatedUser = await query;
 

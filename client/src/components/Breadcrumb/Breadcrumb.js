@@ -9,13 +9,7 @@ function Breadcrumb(props) {
   const classes = useStyles(props);
 
   const breadcrumbNameMap = useMemo(() => ({
-    '/sales': 'Sales',
-    '/support': 'Support',
-    '/about': 'About',
-    '/brands': 'Brands',
     '/profile': 'Profile',
-    '/mobile': 'Mobile',
-    '/laptop': 'Laptop',
     '/cart': 'Cart',
     '/product': 'Product'
   }), []);
