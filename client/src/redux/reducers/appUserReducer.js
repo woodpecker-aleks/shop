@@ -9,7 +9,7 @@ export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async
   return await Http.delete('/api/user');
 });
 
-export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (dispatch) => {
+export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (some, {dispatch}) => {
   const res = await Http.get('/api/user', { resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
@@ -23,7 +23,7 @@ export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (disp
   return user;
 });
 
-export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData, dispatch) => {
+export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData, {dispatch}) => {
   const res = await Http.post('/api/user', newUserData, { reqData: 'form', resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );

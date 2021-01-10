@@ -255,3 +255,71 @@ export function setRecursiveTimeout(func, interval) {
     return setTimeout(tick, interval);
   }, interval);
 }
+
+export const cookie = {
+  toObject() {
+    return document.cookie
+      .split(';')
+      .map(cook => cook.split('='))
+      .reduce((accum, [key, value]) => {
+        accum[decodeURIComponent(key)] = decodeURIComponent(value);
+        return accum;
+      }, {});
+  },
+
+  get(key) {
+    const cookieObj = cookie.toObject();
+
+    return cookieObj[key];
+  },
+
+  set(key, value) {
+    document.cookie = `${ encodeURIComponent(key) }=${ encodeURIComponent(value) }`;
+  },
+
+  remove(key) {
+    document.cookie = `${ encodeURIComponent(key) }=delete; max-age=0`;
+  }
+}
+
+export const elemMatch = (elem, match) => {
+  if (typeof match !== 'object') {
+    if (typeof match === 'function' && !match(elem)) return false;
+    else if (typeof match !== 'function' && elem !== match) return false;
+    else return true;
+  } else {
+    for (const [matchKey, matchValue] of Object.entries(match)) {
+      if (typeof matchValue === 'function' && !matchValue(elem[matchKey])) return false;
+      else if (typeof matchValue !== 'function' && elem[matchKey] !== matchValue) return false;
+    }
+    return true;
+  }
+}
+
+export const array = {
+  modify(arr, match, edit) {
+    let modifiedArray = arr;
+
+    if (typeof match !== 'object') {
+      modifiedArray = arr.map(elem => {
+        let editElem = edit;
+
+        if (typeof edit === 'function') editElem = edit(elem);
+
+        if (!elemMatch(elem, match)) return elem;
+        else return editElem;
+      });
+    } else {
+      modifiedArray = arr.map(elem => {
+        let editElem = edit;
+
+        if (typeof edit === 'function') editElem = edit(elem);
+
+        if (!elemMatch(elem, match)) return elem;
+        else return Object.assign(elem, editElem);
+      });
+    }
+
+    return modifiedArray;
+  }
+}

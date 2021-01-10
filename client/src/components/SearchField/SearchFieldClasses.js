@@ -43,5 +43,5 @@ export const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     padding: theme.spacing(1),
     display: 'block'
-  }
+  },
 }));

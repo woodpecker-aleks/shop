@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import { memo, useState } from "react";
 import { useStyles } from './LoginFormClasses';
 import { emailValidator, passwordValidator } from '../../../constants';
+import { cookie } from "../../../functions";
 
 function LoginForm({ valid, onSubmit, ...props }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,8 +13,8 @@ function LoginForm({ valid, onSubmit, ...props }) {
   
   const { errors, touched, getFieldProps, handleSubmit } = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: cookie.get('userEmail') || '',
+      password: cookie.get('userPassword') || '',
       remember: false
     },
     validate(values) {
@@ -36,6 +37,14 @@ function LoginForm({ valid, onSubmit, ...props }) {
       return errors;
     },
     onSubmit(values, {setSubmitting}) {
+      if (values.remember) {
+        cookie.set('userEmail', values.email);
+        cookie.set('userPassword', values.password);
+      } else {
+        cookie.remove('userEmail');
+        cookie.remove('userPassword');
+      }
+
       onSubmit(values);
       setSubmitting(false);
     }
@@ -70,15 +79,15 @@ function LoginForm({ valid, onSubmit, ...props }) {
           id="password-field"
           type={(showPassword) ? 'text' : 'password'}
           {...getFieldProps('password')}
-          autoComplete="on"
           color="secondary"
+          autoComplete="on"
           endAdornment={
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
                 onClick={() => setShowPassword(prev => !prev)}
               >
-                {(showPassword) ? <Visibility /> : <VisibilityOff />}
+                {showPassword ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
           }

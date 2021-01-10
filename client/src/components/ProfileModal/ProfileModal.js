@@ -19,7 +19,7 @@ function ProfileModal() {
 
   const handleLogout = () => {
     history.push('/');
-    dispatch( logout(dispatch) );
+    dispatch( logout() );
   }
 
   let profileModal = null;

@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Http } from '../../functions';
+import { Http, array } from '../../functions';
 import { callAlert } from './appAlertReducer';
 
-export const addProductToCard = createAsyncThunk('appShopCard/addProduct', async (productId, dispatch) => {
+export const addProductToCard = createAsyncThunk('appShopCard/addProduct', async (productId, {dispatch}) => {
   const res = await Http.get(`/api/card/${productId}`, { resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
@@ -10,7 +10,7 @@ export const addProductToCard = createAsyncThunk('appShopCard/addProduct', async
   return productId;
 });
 
-export const removeProductFromCard = createAsyncThunk('appShopCard/removeProduct', async (productId, dispatch) => {
+export const removeProductFromCard = createAsyncThunk('appShopCard/removeProduct', async (productId, {dispatch}) => {
   const res = await Http.delete(`/api/card/${productId}`, { resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
@@ -18,7 +18,9 @@ export const removeProductFromCard = createAsyncThunk('appShopCard/removeProduct
   return productId;
 });
 
-export const setProductCountFromCard = createAsyncThunk('appShopCard/setProductCount', async (productId, count, dispatch) => {
+export const setProductCountFromCard = createAsyncThunk('appShopCard/setProductCount', async ({ productId, count }, {dispatch}) => {
+  if (count < 0) count = 0;
+
   const res = await Http.get(`/api/card/${productId}/${count}`, { resData: 'res' });
 
   if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
@@ -34,7 +36,8 @@ const appShopCardSlice = createSlice({
   },
   reducers: {
     setShopCardProducts(state, action) {
-      state.products = action.payload;
+      const products = action.payload.map(prod => ({ id: prod._id, count: prod.count }));
+      state.products = products;
     },
 
     clearNotifications(state, action) {
@@ -43,20 +46,19 @@ const appShopCardSlice = createSlice({
   },
   extraReducers: {
     [addProductToCard.fulfilled]: (state, action) => {
-      state.products.push({ product: action.payload, count: 1 });
+      state.products.push({ id: action.payload, count: 1 });
       state.notifications++;
     },
 
     [removeProductFromCard.fulfilled]: (state, action) => {
-      state.products.filter(product => product.product !== action.payload);
+      state.products = state.products.filter(product => product.id !== action.payload);
       if (state.notifications > 0) state.notifications--;
     },
 
     [setProductCountFromCard.fulfilled]: (state, action) => {
       const { productId, count } = action.payload;
 
-      const productIndex = state.products.findIndex(product => product.product === productId);
-      state.products[productIndex] = { product: productId, count }
+      state.products = array.modify(state.products, { id: productId }, { count });
     }
   }
 });

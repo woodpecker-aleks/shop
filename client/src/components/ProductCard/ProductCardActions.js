@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { disslikeProduct, likedProductSelector, likeProduct } from '../../redux/reducers/appLikedProductsCardReducer';
 import { useStyles } from "./ProductCardClasses";
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import { addProductToCard } from '../../redux/reducers/appShopCardReducer';
 
 function ProductCardActions({ product, status, ...props }) {
   const classes = useStyles();
@@ -16,18 +17,25 @@ function ProductCardActions({ product, status, ...props }) {
     isAuth: store.appAuth.isAuth
   }));
   const dispatch = useDispatch();
+
+  const dispatchAddToShopCard = useCallback(() => {
+    dispatch( addProductToCard(product._id) );
+  }, [product._id, dispatch]);
   
   const dispatchLikeProduct = useCallback(() => {
-    dispatch( likeProduct(product._id, dispatch) );
+    dispatch( likeProduct(product._id) );
   }, [product._id, dispatch]);
   
   const dispatchDisslikeProduct = useCallback(() => {
-    dispatch( disslikeProduct(product._id, dispatch) );
+    dispatch( disslikeProduct(product._id) );
   }, [product._id, dispatch]);
 
   return (
     <CardActions className={classes.cardFooter}>
-      <Button startIcon={<ShoppingCartOutlinedIcon />}>
+      <Button
+        startIcon={<ShoppingCartOutlinedIcon />}
+        onClick={dispatchAddToShopCard}
+      >
         Buy
       </Button>
       <Button

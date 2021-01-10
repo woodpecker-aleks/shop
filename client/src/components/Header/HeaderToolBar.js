@@ -1,6 +1,5 @@
 import { Button, IconButton, Tooltip } from "@material-ui/core";
 import NotificationsNoneOutlinedIcon from '@material-ui/icons/NotificationsNoneOutlined';
-import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
 import clsx from 'clsx';
 import { memo, useCallback, useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import useGlobalStyles from '../../globalClasses';
 import AuthModal from '../AuthModal/AuthModal';
 import LikedProductsModal from "../LikedProductsModal/LikedProductsModal";
 import ProfileModal from "../ProfileModal/ProfileModal";
+import ShopCardModal from "../ShopCardModal/ShopCardModal";
 import { useStyles } from './HeaderClasses';
 
 function HeaderToolBar() {
@@ -31,17 +31,7 @@ function HeaderToolBar() {
         <NotificationsNoneOutlinedIcon />
       </IconButton>
     </Tooltip>
-    <Tooltip
-      title="Card"
-      placement="bottom"
-    >
-      <IconButton
-        color="inherit"
-        className={clsx(classes.iconButton, glClasses.iconButton)}
-      >
-        <ShoppingCartOutlinedIcon />
-      </IconButton>
-    </Tooltip>
+    <ShopCardModal />
     {(isAuth) ? (
       <ProfileModal />
     ) : (

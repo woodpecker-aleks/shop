@@ -3,7 +3,7 @@ import { useStyles } from './CarouselClasses';
 import clsx from 'clsx';
 import { setRecursiveTimeout } from '../../functions';
 
-function Carousel({ active = true, speed = 5000, className, children, ...props }) {
+function Carousel({ active, speed = 5000, className, children, ...props }) {
   const classes = useStyles();
   const carouselRef = useRef(null);
   const innerCarouselRef = useRef(null);

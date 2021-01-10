@@ -8,6 +8,7 @@ const HomePage = lazy(() => import('../../pages/HomePage/HomePage'));
 const ProfilePage = lazy(() => import('../../pages/ProfilePage/ProfilePage'));
 const NotFoundPage = lazy(() => import('../../pages/NotFoundPage/NotFoundPage'));
 const ProductPage = lazy(() => import('../../pages/ProductPage/ProductPage'));
+const CardPage = lazy(() => import('../../pages/CardPage/CardPage'));
 const RedirectToHome = () => <Redirect to="/" />
 
 function RouterController() {
@@ -26,17 +27,25 @@ function RouterController() {
       component: RedirectToHome
     },
     {
+      exact: true,
       path: '/profile',
       condition: isAuth,
       component: ProfilePage
     },
     {
+      exact: true,
       path: '/not-found',
       component: NotFoundPage
     },
     {
+      exact: true,
       path: '/product/:url',
       component: ProductPage
+    },
+    {
+      exact: true,
+      path: '/card',
+      component: CardPage
     }
   ]), [isAuth]);
 
@@ -51,7 +60,7 @@ function RouterController() {
             component={route.component}
           />
         ))}
-        <Redirect to="not-found" />
+        <Redirect to="/not-found" />
       </Switch>
     </Suspense>
   )
