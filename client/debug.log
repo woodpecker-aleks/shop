@@ -1,2 +1,2 @@
-  [0116/110039.993:ERROR:directory_reader_win.cc(43)] FindFirstFile: ������� �� ������� ����� ��������� ����. (0x3)
+[0116/110039.993:ERROR:directory_reader_win.cc(43)] FindFirstFile: ������� �� ������� ����� ��������� ����. (0x3)
 [0116/150742.201:ERROR:directory_reader_win.cc(43)] FindFirstFile: ������� �� ������� ����� ��������� ����. (0x3)

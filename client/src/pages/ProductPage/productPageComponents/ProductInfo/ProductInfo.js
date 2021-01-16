@@ -24,13 +24,10 @@ function ProductInfo({ product, status, ...props }) {
   
   const dispatchDisslikeProduct = useCallback(() => {
     dispatch( disslikeProduct(product._id) );
-<<<<<<< HEAD
   }, [product._id, dispatch]);
 
   const dispatchAddProductToCart = useCallback(() => {
     dispatch( addProductToCard(product._id) );
-=======
->>>>>>> 3fdf54a64d164a4164d1823d2da6c8e267874d56
   }, [product._id, dispatch]);
   
   const { currency, isLiked, isAuth } = useSelector(store => ({
