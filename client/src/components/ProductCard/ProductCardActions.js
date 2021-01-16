@@ -18,7 +18,11 @@ function ProductCardActions({ product, status, ...props }) {
   }));
   const dispatch = useDispatch();
 
+<<<<<<< HEAD
   const dispatchAddToShopCart = useCallback(() => {
+=======
+  const dispatchAddToShopCard = useCallback(() => {
+>>>>>>> 3fdf54a64d164a4164d1823d2da6c8e267874d56
     dispatch( addProductToCard(product._id) );
   }, [product._id, dispatch]);
   
@@ -34,7 +38,11 @@ function ProductCardActions({ product, status, ...props }) {
     <CardActions className={classes.cardFooter}>
       <Button
         startIcon={<ShoppingCartOutlinedIcon />}
+<<<<<<< HEAD
         onClick={dispatchAddToShopCart}
+=======
+        onClick={dispatchAddToShopCard}
+>>>>>>> 3fdf54a64d164a4164d1823d2da6c8e267874d56
       >
         Buy
       </Button>

@@ -41,9 +41,12 @@ export const useStyles = makeStyles(theme => ({
   },
   carouselContent: {
     marginRight: theme.spacing(3)
+<<<<<<< HEAD
   },
   menuItemIcon: {
     minWidth: 23,
     marginRight: theme.spacing(1)
+=======
+>>>>>>> 3fdf54a64d164a4164d1823d2da6c8e267874d56
   }
 }));

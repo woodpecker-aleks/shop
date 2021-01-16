@@ -52,7 +52,7 @@ router.get('/card/:productId/:count',
       query.where('card').elemMatch({ _id: productId }).set('card.$.count', count);
 
       const updatedUser = await query;
-
+      console.log(count);
       if (!updatedUser) return res.sendStatus(500);
 
       res.sendStatus(200);

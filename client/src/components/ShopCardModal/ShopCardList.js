@@ -33,7 +33,11 @@ function ShopCardList({ productIds, ...props }) {
       model={products}
       itemKey={product => product._id}
       before={<>
+<<<<<<< HEAD
         <ListItem button component={Link} to="/cart">
+=======
+        <ListItem button component={Link} to="/card">
+>>>>>>> 3fdf54a64d164a4164d1823d2da6c8e267874d56
           <ListItemIcon>
             <ShoppingCartOutlinedIcon />
           </ListItemIcon>
@@ -47,7 +51,11 @@ function ShopCardList({ productIds, ...props }) {
           variant="button"
           className={classes.notFoundText}
         >
+<<<<<<< HEAD
           Cart is empty
+=======
+          Card is empty
+>>>>>>> 3fdf54a64d164a4164d1823d2da6c8e267874d56
         </Typography>
       }
     />
