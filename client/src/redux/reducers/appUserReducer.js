@@ -1,19 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Http } from '../../functions';
+import { httpAddAuthHeaders } from '../../middleware/httpAddAuthHeaders';
+import { httpValidateAuth } from '../../middleware/httpValidateAuth';
+import { httpValidateStatus } from '../../middleware/httpValidateStatus';
 import { callAlert } from './appAlertReducer';
 import { logout } from './appAuthReducer';
 import { setLikedProducts } from './appLikedProductsCardReducer';
 import { setShopCardProducts } from './appShopCardReducer';
 
-export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async () => {
-  return await Http.delete('/api/user');
+export const deleteFetchUser = createAsyncThunk('appUser/deleteFetchUser', async (some, {dispatch}) => {
+  const res = await Http.delete({
+    url: '/api/user',
+    requestMiddleware: [httpAddAuthHeaders],
+    responseMiddleware: [httpValidateStatus(dispatch), httpValidateAuth(dispatch)]
+  });
+
+  return res;
 });
 
 export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (some, {dispatch}) => {
-  const res = await Http.get('/api/user', { resData: 'res' });
-
-  if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
-  if (res.status === 401) dispatch( logout() );
+  const res = await Http.get({
+    url: '/api/user',
+    requestMiddleware: [httpAddAuthHeaders],
+    responseMiddleware: [httpValidateStatus(dispatch), httpValidateAuth(dispatch)]
+  });
 
   const user = await res.json();
 
@@ -24,10 +34,12 @@ export const getFetchUser = createAsyncThunk('appUser/getFetchUser', async (some
 });
 
 export const updateFetchUser = createAsyncThunk('appUser/updateFetchUser', async (newUserData, {dispatch}) => {
-  const res = await Http.post('/api/user', newUserData, { reqData: 'form', resData: 'res' });
-
-  if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
-  if (res.status === 401) dispatch( logout() );
+  const res = await Http.post({
+    url: '/api/user',
+    body: newUserData,
+    requestMiddleware: [httpAddAuthHeaders],
+    responseMiddleware: [httpValidateStatus(dispatch), httpValidateAuth(dispatch)]
+  });
 
   const user = await res.json();
 

@@ -10,24 +10,34 @@ import { useStyles } from "./ShopCardModalClasses";
 
 function ShopCardModal() {
   const classes = useStyles();
+
   const { shopCardNotifications, shopCardProducts } = useSelector(store => ({
     shopCardNotifications: store.appShopCard.notifications,
-    shopCardProducts: store.appShopCard.products,
+    shopCardProducts: store.appShopCard.products
   }));
+
   const badgeClasses = useMemo(() => ({ badge: classes.changesDot }), [classes.changesDot]);
+
   const popoverAnchorOrigin = useMemo(() => ({
     vertical: 'bottom',
     horizontal: 'right',
   }), []);
+
   const popoverTransformOrigin = useMemo(() => ({
     vertical: 'top',
     horizontal: 'right',
   }), []);
+
   const dispatch = useDispatch();
+
   const [modalAnchor, setModalEnchor] = useState(null);
+
   const glClasses = useGlobalStyles();
+
   const productIds = useMemo(() => shopCardProducts.map(product => product.id), [shopCardProducts]);
+
   const notifications = useMemo(() => shopCardNotifications > 0 ? shopCardNotifications : 0, [shopCardNotifications]);
+  
   const handleCloseModal = useCallback(() => setModalEnchor(null), [setModalEnchor]);
 
   const handleOpenModal = useCallback(event => {

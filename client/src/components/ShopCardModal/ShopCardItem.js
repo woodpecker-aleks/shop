@@ -4,7 +4,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { transferCurrency } from "../../functions";
-import { removeProductFromCart, setProductCountFromCart } from "../../redux/reducers/appShopCartReducer";
+import { removeProductFromCard, setProductCountFromCard } from "../../redux/reducers/appShopCardReducer";
 import Carousel from "../Carousel/Carousel";
 import { useStyles } from "./ShopCardModalClasses";
 import BackspaceSharpIcon from '@material-ui/icons/BackspaceSharp';
@@ -12,28 +12,30 @@ import PlusOneSharpIcon from '@material-ui/icons/PlusOneSharp';
 import ExposureNeg1SharpIcon from '@material-ui/icons/ExposureNeg1Sharp';
 
 function ShopCardItem({ product, deleteItem, ...props }) {
-  const { currency, shopCartProducts } = useSelector(store => ({
-    shopCartProducts: store.appShopCart.products,
+  const { currency, shopCardProducts } = useSelector(store => ({
+    shopCardProducts: store.appShopCard.products,
     currency: store.appCurrency
   }));
+
   const classes = useStyles();
+  
   const dispatch = useDispatch();
 
   const dispatchRemoveProductFromCart = useCallback(() => {
-    dispatch( removeProductFromCart(product._id) );
+    dispatch( removeProductFromCard(product._id) );
     deleteItem();
   }, [product._id, dispatch, deleteItem]);
 
   const dispatchIncrementProductCountFromCart = useCallback(() => {
-    dispatch( setProductCountFromCart({ productId: product._id, count: shopCartProducts.find(prod => prod.id === product._id)?.count + 1 }));
-  }, [product._id, shopCartProducts, dispatch]);
+    dispatch( setProductCountFromCard({ productId: product._id, count: shopCardProducts.find(prod => prod.id === product._id)?.count + 1 }));
+  }, [product._id, shopCardProducts, dispatch]);
 
   const dispatchDecrementProductCountFromCart = useCallback(() => {
-    dispatch( setProductCountFromCart({ productId: product._id, count: shopCartProducts.find(prod => prod.id === product._id)?.count - 1 }));
-  }, [product._id, shopCartProducts, dispatch]);
+    dispatch( setProductCountFromCard({ productId: product._id, count: shopCardProducts.find(prod => prod.id === product._id)?.count - 1 }));
+  }, [product._id, shopCardProducts, dispatch]);
 
   const price = useMemo(() => transferCurrency(product.price, currency), [product.price, currency]);
-  const count = useMemo(() => shopCartProducts.find(prod => prod.id === product._id)?.count, [shopCartProducts, product._id]);
+  const count = useMemo(() => shopCardProducts.find(prod => prod.id === product._id)?.count, [shopCardProducts, product._id]);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const handleCloseMenu = useCallback(() => setMenuAnchorEl(null), []);
   const handleOpenMenu = useCallback(event => setMenuAnchorEl(event.currentTarget), []);

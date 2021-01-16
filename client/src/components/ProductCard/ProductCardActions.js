@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { disslikeProduct, likedProductSelector, likeProduct } from '../../redux/reducers/appLikedProductsCardReducer';
 import { useStyles } from "./ProductCardClasses";
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { addProductToCart } from '../../redux/reducers/appShopCartReducer';
+import { addProductToCard } from '../../redux/reducers/appShopCardReducer';
 
 function ProductCardActions({ product, status, ...props }) {
   const classes = useStyles();
@@ -19,7 +19,7 @@ function ProductCardActions({ product, status, ...props }) {
   const dispatch = useDispatch();
 
   const dispatchAddToShopCart = useCallback(() => {
-    dispatch( addProductToCart(product._id) );
+    dispatch( addProductToCard(product._id) );
   }, [product._id, dispatch]);
   
   const dispatchLikeProduct = useCallback(() => {

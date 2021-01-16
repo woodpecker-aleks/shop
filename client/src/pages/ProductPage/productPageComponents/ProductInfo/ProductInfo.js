@@ -12,7 +12,7 @@ import ProductCardTimer from '../../../../components/ProductCard/ProductCardTime
 import { disslikeProduct, likedProductSelector, likeProduct } from "../../../../redux/reducers/appLikedProductsCardReducer";
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderOutlinedIcon from '@material-ui/icons/FavoriteBorderOutlined';
-import { addProductToCart } from "../../../../redux/reducers/appShopCardReducer";
+import { addProductToCard } from "../../../../redux/reducers/appShopCardReducer";
 
 function ProductInfo({ product, status, ...props }) {
   const classes = useStyles();
@@ -27,7 +27,7 @@ function ProductInfo({ product, status, ...props }) {
   }, [product._id, dispatch]);
 
   const dispatchAddProductToCart = useCallback(() => {
-    dispatch( addProductToCart(product._id) );
+    dispatch( addProductToCard(product._id) );
   }, [product._id, dispatch]);
   
   const { currency, isLiked, isAuth } = useSelector(store => ({

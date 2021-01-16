@@ -1,19 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { callAlert } from './appAlertReducer';
 import { Http } from '../../functions';
+import { httpAddAuthHeaders } from '../../middleware/httpAddAuthHeaders';
+import { httpValidateAuth } from '../../middleware/httpValidateAuth';
+import { httpValidateStatus } from '../../middleware/httpValidateStatus';
+import { callAlert } from './appAlertReducer';
 
 export const likeProduct = createAsyncThunk('likedProductsCard/likeProduct', async (productId, {dispatch}) => {
-  const res = await Http.get(`/api/product/like/${productId}`, { resData: 'res' });
+  const res = await Http.get({
+    url: `/api/product/like/${productId}`,
+    requestMiddleware: [httpAddAuthHeaders],
+    responseMiddleware: [httpValidateStatus(dispatch), httpValidateAuth(dispatch)]
+  });
 
-  if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
+  if (res.ok) dispatch( callAlert({ type: 'success', children: 'Liked new product' }) );
 
   return productId;
 });
 
 export const disslikeProduct = createAsyncThunk('likedProductsCard/disslikeProduct', async (productId, {dispatch}) => {
-  const res = await Http.delete(`/api/product/like/${productId}`, { resData: 'res' });
-
-  if (!res.ok) dispatch( callAlert({ type: 'error', children: Http.translateStatus(res.status) }) );
+  await Http.delete({
+    url: `/api/product/like/${productId}`,
+    requestMiddleware: [httpAddAuthHeaders],
+    responseMiddleware: [httpValidateStatus(dispatch), httpValidateAuth(dispatch)]
+  });
 
   return productId;
 });

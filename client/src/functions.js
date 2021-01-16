@@ -91,137 +91,67 @@ export const Http = {
     }
   },
 
-  async get(url, config = {}) {
+  async get({ requestMiddleware = [], responseMiddleware = [], ...config }) {
     try {
-      const { auth = true, resData = 'json' } = config;
-      const fetchConfig = {
-        method: GET,
-        headers: {}
-      };
+      requestMiddleware.forEach(middleware => middleware(config));
 
-      if (auth) {
-        const user = JSON.parse(localStorage.getItem('userData'));
+      const { url, headers = {}, method = GET} = config;
 
-        if (user?.token) fetchConfig.headers['Authorization'] = `Bearer ${user.token}`;
-      }
+      const res = await fetch(url, { method, headers });
 
-      const res = await fetch(url, fetchConfig);
+      responseMiddleware.forEach(middleware => middleware(res));
 
-      if (resData === 'json') return await res.json();
-
-      else if (resData === 'str') return await res.text();
-
-      else if (resData === 'status') return res.status;
-
-      else if (resData === 'ok') return res.ok;
-
-      else if (resData === 'res') return res;
-
+      return res;
     } catch (err) {
       throw new Error(err.message);
     }
   },
 
-  async post(url, data, config = {}) {
+  async post({ requestMiddleware = [], responseMiddleware = [], ...config }) {
     try {
-      const { auth = true, reqData = 'json', resData = 'json' } = config;
-      const fetchConfig = {
-        method: POST,
-        headers: {}
-      };
+      requestMiddleware.forEach(middleware => middleware(config));
 
-      if (reqData === 'json') {
-        fetchConfig.body = JSON.stringify(data);
-        fetchConfig.headers['Content-type'] = 'application/json';
-      } else if (reqData === 'form') fetchConfig.body = data;
+      const { url, headers = {}, method = POST, body } = config;
 
-      if (auth) {
-        const user = JSON.parse(localStorage.getItem('userData'));
+      const res = await fetch(url, { method, headers, body });
 
-        if (user?.token) fetchConfig.headers['Authorization'] = `Bearer ${user.token}`;
-      }
+      responseMiddleware.forEach(middleware => middleware(res));
 
-      const res = await fetch(url, fetchConfig);
-
-      if (resData === 'json') return await res.json();
-
-      else if (resData === 'str') return await res.text();
-
-      else if (resData === 'status') return res.status;
-
-      else if (resData === 'ok') return res.ok;
-
-      else if (resData === 'res') return res;
-      
+      return res;
     } catch (err) {
-      return err;
+      throw new Error(err.message);
     }
   },
 
-  async delete(url, config = {}) {
+  async delete({ requestMiddleware = [], responseMiddleware = [], ...config }) {
     try {
-      const { auth = true, resData = 'json' } = config;
-      const fetchConfig = {
-        method: DELETE,
-        headers: {}
-      };
+      requestMiddleware.forEach(middleware => middleware(config));
 
-      if (auth) {
-        const user = JSON.parse(localStorage.getItem('userData'));
+      const { url, headers = {}, method = DELETE } = config;
 
-        if (user?.token) fetchConfig.headers['Authorization'] = `Bearer ${user.token}`;
-      }
+      const res = await fetch(url, { method, headers });
 
-      const res = await fetch(url, fetchConfig);
+      responseMiddleware.forEach(middleware => middleware(res));
 
-      if (resData === 'json') return await res.json();
-
-      else if (resData === 'str') return await res.text();
-
-      else if (resData === 'status') return res.status;
-
-      else if (resData === 'ok') return res.ok;
-
-      else if (resData === 'res') return res;
-
+      return res;
     } catch (err) {
-      return err;
+      throw new Error(err.message);
     }
   },
 
-  async put(url, data, config = {}) {
+  async put({ requestMiddleware = [], responseMiddleware = [], ...config }) {
     try {
-      const { auth = true, reqData = 'json', resData = 'json' } = config;
-      const fetchConfig = {
-        method: PUT,
-        headers: {}
-      };
+      requestMiddleware.forEach(middleware => middleware(config));
 
-      if (reqData === 'json') {
-        fetchConfig.body = JSON.stringify(data);
-        fetchConfig.headers['Content-type'] = 'application/json';
-      } else if (reqData === 'form') fetchConfig.body = data;
+      const { url, headers = {}, method = PUT, body } = config;
 
-      if (auth) {
-        const user = JSON.parse(localStorage.getItem('userData'));
+      const res = await fetch(url, { method, headers, body });
 
-        if (user?.token) fetchConfig.headers['Authorization'] = `Bearer ${user.token}`;
-      }
+      responseMiddleware.forEach(middleware => middleware(res));
 
-      const res = await fetch(url, fetchConfig);
-
-      if (resData === 'json') return await res.json();
-
-      else if (resData === 'str') return await res.text();
-
-      else if (resData === 'status') return res.status;
-
-      else if (resData === 'ok') return res.ok;
-
-      else if (resData === 'res') return res;
-      
+      return res;
     } catch (err) {
-      return err;
+      throw new Error(err.message);
     }
   },
 }
@@ -321,5 +251,44 @@ export const array = {
     }
 
     return modifiedArray;
+  }
+}
+
+const globalIntervalStore = {};
+
+export function setGlobalInterval(listener, interval) {
+  const intervalKey = String(interval);
+  const intervalObj = globalIntervalStore[intervalKey];
+
+  if (!intervalObj) {
+    globalIntervalStore[intervalKey] = { listeners: new Set([listener]) };
+    const newIntervalObj = globalIntervalStore[intervalKey];
+
+    newIntervalObj.id = setRecursiveTimeout(() => {
+      newIntervalObj.listeners.forEach(listener => listener());
+    }, interval);
+  } else {
+    if (!intervalObj.listeners.has(listener)) {
+      intervalObj.listeners.add(listener);
+    }
+  }
+
+  return { listener, intervalKey };
+}
+
+export function clearGlobalInterval(intervalIdObj) {
+  if (!intervalIdObj) return;
+
+  const { listener, intervalKey } = intervalIdObj;
+  const intervalObj = globalIntervalStore[intervalKey];
+
+  if (intervalObj) {
+    intervalObj.listeners.delete(listener);
+
+    if (intervalObj.listeners.length) return;
+
+    clearTimeout(intervalObj.id);
+
+    delete globalIntervalStore[intervalKey];
   }
 }

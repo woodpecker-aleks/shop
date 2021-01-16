@@ -1,37 +1,35 @@
-import { useEffect, useState, memo } from 'react';
+import { useEffect, useState, memo, useCallback } from 'react';
 import { useStyles } from './ProductCardClasses';
 import moment from 'moment';
 import clsx from 'clsx';
+import { clearGlobalInterval, setGlobalInterval } from '../../functions';
 
 function ProductCardTimer({ sale, className }) {
   const classes = useStyles();
   const [saleTime, setSaleTime] = useState(null);
 
+  const updateTime = useCallback(() => {
+    const saleEndTime = new Date(sale?.end);
+    const currentTime = Date.now();
+
+    if (saleEndTime > currentTime) {
+      const saleTime = new Date(saleEndTime - currentTime);
+      setSaleTime( moment(saleTime).format('[in] DD:hh:mm:ss') );
+    }
+  }, [sale?.end]);
+
   useEffect(() => {
-    let timer = null;
+    let timer;
     
     if (sale) {
-      const saleEndTime = new Date(sale.end);
-
-      timer = setInterval(() => {
-        const currentTime = Date.now();
-
-        if (saleEndTime > currentTime) {
-          const saleTime = new Date(saleEndTime - currentTime);
-          setSaleTime(moment(saleTime).format('[in] DD:hh:mm:ss'));
-        } else timer = null;
-      }, 1000);
+      timer = setGlobalInterval(updateTime, 1000);
     }
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [sale]);
+    return () => clearGlobalInterval(timer);
+  }, [sale, updateTime]);
 
-  let saleTimer = null;
-  if (saleTime) saleTimer = <div className={clsx(classes.cardSaleTimer, className)}>{saleTime}</div>
-
-  return saleTimer;
+  if (saleTime) return <div className={clsx(classes.cardSaleTimer, className)}>{saleTime}</div>
+  else return null;
 }
 
 export default memo(ProductCardTimer);
