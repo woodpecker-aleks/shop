@@ -3,6 +3,7 @@ const User = require('../models/User');
 const authMiddleware = require('../middleware/auth.middleware');
 const multer = require('multer');
 const router = Router();
+const Product = require('../models/Product');
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -19,6 +20,20 @@ function fileFilter(req, file, cb) {
     file.mimetype === 'image/jpeg') cb(null, true);
   else cb(null, false);
 }
+
+router.post('/dima', async (req, res) => {
+  const { name, surname } = req.body;
+
+  const dima = {
+    name: 'Dima',
+    surname: 'Kuzmin',
+    age: 35
+  }
+
+  if (name === dima.name && surname === dima.surname) {
+    res.json(dima.age);
+  }
+});
 
 router.post('/user',
   authMiddleware,
@@ -57,7 +72,35 @@ router.get('/user',
 
       if (!user) return res.status(404).json({ message: 'User is not found' });
 
-      res.json(user);
+      const {
+        firstName,
+        lastName,
+        phone,
+        email,
+        card,
+        avatar,
+        likedProducts
+      } = user;
+
+      const modifiedUser = {
+        firstName,
+        lastName,
+        phone,
+        email,
+        card,
+        avatar,
+        likedProducts
+      }
+
+      for (let i = 0; i < modifiedUser.card.length; i++) {
+        const { _id, count } = modifiedUser.card[i];
+
+        const product = await Product.findById(_id);
+
+        modifiedUser.card[i] = { count, product, id: _id }
+      }
+
+      res.json(modifiedUser);
     } catch (err) {
       console.log(err);
     }

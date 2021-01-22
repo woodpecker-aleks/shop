@@ -13,8 +13,11 @@ const appCurrencySlice = createSlice({
   initialState: initialState(),
   reducers: {
     switchCurrency(state, action) {
-      localStorage.setItem('currency', action.payload);
-      return action.payload;
+      const newCurrency = action.payload;
+
+      localStorage.setItem('currency', newCurrency);
+
+      return newCurrency;
     }
   }
 });

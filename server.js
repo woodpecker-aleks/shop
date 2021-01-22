@@ -17,6 +17,8 @@ app.use('/api', require('./routes/product.routes'));
 
 app.use('/api', require('./routes/card.routes'));
 
+app.use('/api', require('./routes/order.routes'));
+
 start();
 
 

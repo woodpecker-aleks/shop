@@ -8,6 +8,7 @@ import { useEffect, useState, memo, useMemo } from 'react'
 import { useHttp } from '../../hooks/http.hook';
 import clsx from 'clsx';
 import { Typography } from '@material-ui/core';
+import { POST } from '../../constants';
 
 SwiperCore.use([Navigation, Pagination, Autoplay, Keyboard]);
 
@@ -22,7 +23,7 @@ function CardsSlider({ className, filter, ...props }) {
   }, [cards.length]);
 
   useEffect(() => {
-    request('/api/products', 'POST', filter).then(data => setCards(data));
+    request('/api/products', POST, filter).then(data => setCards(data));
   }, [request, filter]);
 
   let slides;

@@ -1,7 +1,10 @@
 import { makeStyles } from "@material-ui/core";
 
-export default makeStyles(theme => ({
+export const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
+  },
+  profile: {
     width: 'calc(50% - 20px)',
     minHeight: '50vh',
     display: 'flex',
@@ -76,5 +79,35 @@ export default makeStyles(theme => ({
   changesBtn: {
     color: theme.palette.info.main,
     borderColor: theme.palette.info.main
+  },
+  orders: {
+    width: '50%',
+    marginLeft: theme.spacing(3)
+  },
+  order: {
+    marginBottom: theme.spacing(3),
+    position: 'relative'
+  },
+  orderHeader: {
+    padding: theme.spacing(1),
+    display: 'flex',
+    justifyContent: 'space-between',
+    color: 'gray',
+    alignItems: 'center'
+  },
+  orderBody: {
+    paddingInline: theme.spacing(2),
+    paddingBlock: theme.spacing(1)
+  },
+  orderFooter: {
+    color: 'gray',
+    paddingBlock: theme.spacing(1),
+    paddingInline: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  time: {
+    fontSize: 14
   }
 }));

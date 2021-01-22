@@ -12,43 +12,44 @@ import PlusOneSharpIcon from '@material-ui/icons/PlusOneSharp';
 import ExposureNeg1SharpIcon from '@material-ui/icons/ExposureNeg1Sharp';
 
 function ShopCardItem({ product, deleteItem, ...props }) {
-  const { currency, shopCardProducts } = useSelector(store => ({
-    shopCardProducts: store.appShopCard.products,
-    currency: store.appCurrency
-  }));
+  const currency = useSelector(store => store.appCurrency);
   
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const dispatchRemoveProductFromCard = useCallback(() => {
-    dispatch( removeProductFromCard(product._id) );
+    dispatch( removeProductFromCard(product.id) );
     deleteItem();
-  }, [product._id, dispatch, deleteItem]);
+  }, [product.id, dispatch, deleteItem]);
 
   const dispatchIncrementProductCountFromCard = useCallback(() => {
-    dispatch( setProductCountFromCard({ productId: product._id, count: shopCardProducts.find(prod => prod.id === product._id)?.count + 1 }));
-  }, [product._id, shopCardProducts, dispatch]);
+    dispatch(setProductCountFromCard({ productId: product.id, count: product.count + 1 }));
+  }, [product.id, product.count, dispatch]);
 
   const dispatchDecrementProductCountFromCard = useCallback(() => {
-    dispatch( setProductCountFromCard({ productId: product._id, count: shopCardProducts.find(prod => prod.id === product._id)?.count - 1 }));
-  }, [product._id, shopCardProducts, dispatch]);
+    dispatch( setProductCountFromCard({ productId: product.id, count: product.count - 1 }));
+  }, [product.id, product.count, dispatch]);
 
-  const price = useMemo(() => transferCurrency(product.price, currency), [product.price, currency]);
-  const count = useMemo(() => shopCardProducts.find(prod => prod.id === product._id)?.count, [shopCardProducts, product._id]);
+  const price = useMemo(() => transferCurrency(product.info.price, currency), [product.info.price, currency]);
+
+  const count = useMemo(() => product.count, [product.count]);
+
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+
   const handleCloseMenu = useCallback(() => setMenuAnchorEl(null), []);
+  
   const handleOpenMenu = useCallback(event => setMenuAnchorEl(event.currentTarget), []);
 
   return (
     <ListItem
       button
       component={Link}
-      to={`/product/${product.url}`}
+      to={`/product/${product.info.url}`}
     >
       <ListItemAvatar>
         <Avatar
-          alt={product.name}
-          src={`/images/products/${product.mainImage}`}
+          alt={product.info.name}
+          src={`/images/products/${product.info.mainImage}`}
           variant="rounded"
           classes={{
             img: classes.productAvatar
@@ -57,7 +58,7 @@ function ShopCardItem({ product, deleteItem, ...props }) {
       </ListItemAvatar>
       <ListItemText
         classes={{ primary: classes.primaryText }}
-        primary={<Carousel className={classes.carousel} active={true}><span className={classes.carouselContent}>{product.name}</span></Carousel>}
+        primary={<Carousel className={classes.carousel} active={true}><span className={classes.carouselContent}>{product.info.name}</span></Carousel>}
         secondary={`price: ${price} count: ${count}`}
       />
       <ListItemSecondaryAction>
