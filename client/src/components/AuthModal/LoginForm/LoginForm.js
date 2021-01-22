@@ -77,7 +77,7 @@ function LoginForm({ valid, onSubmit, ...props }) {
         </InputLabel>
         <Input
           id="password-field"
-          type={(showPassword) ? 'text' : 'password'}
+          type={showPassword ? 'text' : 'password'}
           {...getFieldProps('password')}
           color="secondary"
           autoComplete="on"

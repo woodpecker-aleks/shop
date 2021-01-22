@@ -3,8 +3,6 @@ import { Http } from '../../functions';
 import { httpAddAuthHeaders } from '../../middleware/httpAddAuthHeaders';
 import { httpValidateAuth } from '../../middleware/httpValidateAuth';
 import { httpValidateStatus } from '../../middleware/httpValidateStatus';
-import { callAlert } from './appAlertReducer';
-import { logout } from './appAuthReducer';
 import { setLikedProducts } from './appLikedProductsCardReducer';
 import { setShopCardProducts } from './appShopCardReducer';
 

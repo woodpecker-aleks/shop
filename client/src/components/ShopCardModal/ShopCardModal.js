@@ -13,8 +13,9 @@ function ShopCardModal() {
   
   const { shopCardNotifications, shopCardProducts } = useSelector(store => ({
     shopCardNotifications: store.appShopCard.notifications,
-    shopCardProducts: store.appShopCard.products,
+    shopCardProducts: store.appShopCard.products
   }));
+
   const badgeClasses = useMemo(() => ({ badge: classes.changesDot }), [classes.changesDot]);
 
   const popoverAnchorOrigin = useMemo(() => ({
@@ -32,8 +33,6 @@ function ShopCardModal() {
   const [modalAnchor, setModalEnchor] = useState(null);
 
   const glClasses = useGlobalStyles();
-
-  const productIds = useMemo(() => shopCardProducts.map(product => product.id), [shopCardProducts]);
 
   const notifications = useMemo(() => shopCardNotifications > 0 ? shopCardNotifications : 0, [shopCardNotifications]);
   
@@ -70,7 +69,7 @@ function ShopCardModal() {
         anchorOrigin={popoverAnchorOrigin}
         transformOrigin={popoverTransformOrigin}
       >
-        <ShopCardList productIds={productIds} />
+        <ShopCardList products={shopCardProducts} />
       </Popover>
   </>)
 }

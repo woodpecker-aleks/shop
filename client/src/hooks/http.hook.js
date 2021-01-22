@@ -13,6 +13,12 @@ export const useHttp = () => {
         headers['Content-Type'] = 'application/json';
       }
 
+      const user = JSON.parse(localStorage.getItem('userData'));
+
+      if (user?.token) {
+        headers['Authorization'] = `Bearer ${user.token}`;
+      }
+
       const res = await fetch(url, { method, body, headers });
       const data = await res.json();
 

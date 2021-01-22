@@ -84,7 +84,7 @@ function AppMenu() {
       tabIcon: <ShoppingCartOutlinedIcon />,
       tabPrimaryText: 'Cart',
       onClick: dispatchCloseMenu,
-      linkTo: '/card'
+      linkTo: '/cart'
     },
     {
       tabIcon: <CollectionsBookmarkOutlinedIcon />,

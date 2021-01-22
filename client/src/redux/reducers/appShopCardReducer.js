@@ -4,6 +4,16 @@ import { httpAddAuthHeaders } from '../../middleware/httpAddAuthHeaders';
 import { httpValidateStatus } from '../../middleware/httpValidateStatus';
 import { callAlert } from './appAlertReducer';
 
+export const clearProductCart = createAsyncThunk('appShopCard/clearProductCart', async (some, {dispatch}) => {
+  const res = await Http.delete({
+    url: '/api/card',
+    requestMiddleware: [httpAddAuthHeaders],
+    responseMiddleware: [httpValidateStatus(dispatch)]
+  });
+
+  return;
+});
+
 export const addProductToCard = createAsyncThunk('appShopCard/addProduct', async (productId, {dispatch}) => {
   const res = await Http.get({
     url: `/api/card/${productId}`,
@@ -11,9 +21,11 @@ export const addProductToCard = createAsyncThunk('appShopCard/addProduct', async
     responseMiddleware: [httpValidateStatus(dispatch)]
   });
 
-  if (res.ok) dispatch( callAlert({ type: 'success', children: 'Added new product to cart' }) );
+  if (res.ok) dispatch( callAlert({ type: 'success', children: 'Added new product to cart' }));
+  
+  const newProduct = await res.json();
 
-  return productId;
+  return newProduct;
 });
 
 export const removeProductFromCard = createAsyncThunk('appShopCard/removeProduct', async (productId, {dispatch}) => {
@@ -42,11 +54,12 @@ const appShopCardSlice = createSlice({
   name: 'appShopCard',
   initialState: {
     products: [],
-    notifications: 0
+    notifications: 0,
   },
   reducers: {
     setShopCardProducts(state, action) {
-      const products = action.payload.map(prod => ({ id: prod._id, count: prod.count }));
+      const products = action.payload.map(prod => ({ id: prod.id, info: prod.product, count: prod.count }));
+      
       state.products = products;
     },
 
@@ -56,12 +69,18 @@ const appShopCardSlice = createSlice({
   },
   extraReducers: {
     [addProductToCard.fulfilled]: (state, action) => {
-      state.products.push({ id: action.payload, count: 1 });
-      state.notifications++;
+      const newProduct = action.payload;
+      const match = state.products.find(product => product.id === newProduct._id);
+
+      if (!match) {
+        state.products.push({ id: newProduct._id, count: 1, info: newProduct });
+        state.notifications++;
+      }
     },
 
     [removeProductFromCard.fulfilled]: (state, action) => {
       state.products = state.products.filter(product => product.id !== action.payload);
+      
       if (state.notifications > 0) state.notifications--;
     },
 
@@ -69,6 +88,10 @@ const appShopCardSlice = createSlice({
       const { productId, count } = action.payload;
 
       state.products = array.modify(state.products, { id: productId }, { count });
+    },
+
+    [clearProductCart.fulfilled]: (state, action) => {
+      state.products = [];
     }
   }
 });

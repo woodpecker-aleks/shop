@@ -3,6 +3,22 @@ const { Types } = require('mongoose');
 const User = require('../models/User');
 const router = Router();
 const authMiddleware = require('../middleware/auth.middleware');
+const Product = require('../models/Product');
+
+router.delete('/card',
+  authMiddleware,
+  async (req, res) => {
+    try {
+      const userId = req.user.userId;
+
+      await User.findByIdAndUpdate(userId, { card: [] }, { new: true });
+      
+      res.sendStatus(200);
+    } catch (err) {
+      res.sendStatus(500);
+    }
+  }
+)
 
 router.delete('/card/:id',
   authMiddleware,
@@ -27,13 +43,15 @@ router.get('/card/:id',
   async (req, res) => {
     try {
       const userId = req.user.userId;
-      const product = req.params.id;
+      const productId = req.params.id;
 
-      const updatedUser = await User.findByIdAndUpdate(userId, { $addToSet: { card: { _id: product } } }, { new: true });
+      const updatedUser = await User.findByIdAndUpdate(userId, { $addToSet: { card: { _id: productId } } }, { new: true });
+
+      const product = await Product.findById(productId);
 
       if (!updatedUser) return res.sendStatus(500);
 
-      res.sendStatus(200);
+      res.status(201).json(product);
     } catch (err) {
       res.sendStatus(500);
     }

@@ -15,8 +15,8 @@ function Header() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const glClasses = useGlobalStyles();
-  const dispatchToggleAppMenu = useCallback(() => dispatch( toggleAppMenu() ), [dispatch]);
-
+  const dispatchToggleAppMenu = useCallback(() => dispatch(toggleAppMenu()), [dispatch]);
+  
   return (
     <AppBar
       position="fixed"

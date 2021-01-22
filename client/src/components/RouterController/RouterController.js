@@ -45,6 +45,7 @@ function RouterController() {
     {
       exact: true,
       path: '/cart',
+      condition: isAuth,
       component: CartPage
     }
   ]), [isAuth]);
